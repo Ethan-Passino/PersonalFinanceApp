@@ -1,28 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PersonalFinanceApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+
+            // Load the Dashboard by default
+            DynamicContentFrame.Navigate(new DashboardPage());
+        }
+
+        private void NavigateToDashboard(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new DashboardPage());
+        }
+
+        private void NavigateToTransactions(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new TransactionsPage());
+        }
+
+        private void NavigateToReports(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new ReportsPage());
+        }
+
+        private void NavigateToBudgets(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new BudgetsPage());
         }
     }
 }

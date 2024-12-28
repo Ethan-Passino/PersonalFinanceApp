@@ -1,0 +1,62 @@
+﻿<Page x:Class="PersonalFinanceApp.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Dashboard">
+    <Grid Background="#1E1E1E">
+        <!-- Define Rows for Layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- Charts fill available space -->
+        </Grid.RowDefinitions>
+
+        <!-- Define Columns for Layout -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <!-- Left Column: Cartesian Chart -->
+            <ColumnDefinition Width="1*" />
+            <!-- Right Column: Pie Chart -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Monthly Trends Chart -->
+        <Grid Grid.Row="0" Grid.Column="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <!-- Title -->
+                <RowDefinition Height="*" />
+                <!-- Chart -->
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Monthly Trends" 
+                       Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+            <lvc:CartesianChart Background="#333333" Grid.Row="1"
+                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <lvc:CartesianChart.Series>
+                    <lvc:ColumnSeries Values="3000,2000,1500,4000" Title="Expenses" 
+                                       Fill="LightBlue" Stroke="LightBlue" />
+                </lvc:CartesianChart.Series>
+            </lvc:CartesianChart>
+        </Grid>
+
+        <!-- Expense Breakdown Chart -->
+        <Grid Grid.Row="0" Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <!-- Title -->
+                <RowDefinition Height="*" />
+                <!-- Chart -->
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Expense Breakdown" 
+                       Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+            <lvc:PieChart Background="#333333" Grid.Row="1"
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <lvc:PieChart.Series>
+                    <lvc:PieSeries Title="Food" Values="500" Fill="Orange" />
+                    <lvc:PieSeries Title="Rent" Values="1200" Fill="LightGreen" />
+                    <lvc:PieSeries Title="Entertainment" Values="300" Fill="LightBlue" />
+                </lvc:PieChart.Series>
+            </lvc:PieChart>
+        </Grid>
+    </Grid>
+</Page>
