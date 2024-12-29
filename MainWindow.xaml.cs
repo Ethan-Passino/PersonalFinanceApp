@@ -43,5 +43,11 @@ namespace PersonalFinanceApp
         {
             DynamicContentFrame.Navigate(new BudgetsPage());
         }
+
+        private void NavigateToPayStub(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new PayStubPage());
+        }
+
     }
 }

@@ -34,6 +34,8 @@
             Style="{StaticResource DarkThemeButton}" Click="NavigateToReports" />
             <Button Content="Edit Budgets" Width="150" Height="40" Margin="10"
             Style="{StaticResource DarkThemeButton}" Click="NavigateToBudgets" />
+            <Button Content="Add Pay Stub" Width="150" Height="40" Margin="10"
+            Style="{StaticResource DarkThemeButton}" Click="NavigateToPayStub" />
         </StackPanel>
 
     </Grid>
