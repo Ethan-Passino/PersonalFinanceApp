@@ -34,6 +34,8 @@
             Style="{StaticResource DarkThemeButton}" Click="NavigateToReports" />
             <Button Content="Add Pay Stub" Width="150" Height="40" Margin="10"
             Style="{StaticResource DarkThemeButton}" Click="NavigateToPayStub" />
+            <Button Content="View Records" Width="150" Height="40" Margin="10"
+            Style="{StaticResource DarkThemeButton}" Click="NavigateToRecords" />
         </StackPanel>
 
     </Grid>
