@@ -6,57 +6,75 @@
     <Grid Background="#1E1E1E">
         <!-- Define Rows for Layout -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- High-Level Summary -->
             <RowDefinition Height="*" />
-            <!-- Charts fill available space -->
+            <!-- Charts and Transactions -->
+            <RowDefinition Height="Auto" />
+            <!-- Buttons -->
         </Grid.RowDefinitions>
 
-        <!-- Define Columns for Layout -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <!-- Left Column: Cartesian Chart -->
-            <ColumnDefinition Width="1*" />
-            <!-- Right Column: Pie Chart -->
-        </Grid.ColumnDefinitions>
+        <!-- High-Level Summary -->
+        <Grid Grid.Row="0" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
 
-        <!-- Monthly Trends Chart -->
-        <Grid Grid.Row="0" Grid.Column="0" Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <!-- Title -->
-                <RowDefinition Height="*" />
-                <!-- Chart -->
-            </Grid.RowDefinitions>
+            <!-- Income vs Expenses Summary -->
+            <StackPanel Grid.Column="0" Margin="10">
+                <TextBlock Text="High-Level Summary" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+                <Grid Margin="10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <TextBlock Text="Total Income" Foreground="LightGreen" FontSize="16" FontWeight="Bold" />
+                        <TextBlock x:Name="TotalIncome" Text="$0.00" Foreground="White" FontSize="24" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="10">
+                        <TextBlock Text="Total Expenses" Foreground="Red" FontSize="16" FontWeight="Bold" />
+                        <TextBlock x:Name="TotalExpenses" Text="$0.00" Foreground="White" FontSize="24" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
 
-            <TextBlock Text="Monthly Trends" 
-                       Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-            <lvc:CartesianChart Background="#333333" Grid.Row="1"
-                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <lvc:CartesianChart.Series>
-                    <lvc:ColumnSeries Values="3000,2000,1500,4000" Title="Expenses" 
-                                       Fill="LightBlue" Stroke="LightBlue" />
-                </lvc:CartesianChart.Series>
-            </lvc:CartesianChart>
+            <!-- Expense Breakdown Chart -->
+            <StackPanel Grid.Column="1" Margin="10">
+                <TextBlock Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                <lvc:PieChart x:Name="ExpenseBreakdownChart" Background="#333333" Height="300" />
+            </StackPanel>
         </Grid>
 
-        <!-- Expense Breakdown Chart -->
-        <Grid Grid.Row="0" Grid.Column="1" Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <!-- Title -->
-                <RowDefinition Height="*" />
-                <!-- Chart -->
-            </Grid.RowDefinitions>
+        <!-- Charts and Transactions Section -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Expense Breakdown" 
-                       Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-            <lvc:PieChart Background="#333333" Grid.Row="1"
-                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <lvc:PieChart.Series>
-                    <lvc:PieSeries Title="Food" Values="500" Fill="Orange" />
-                    <lvc:PieSeries Title="Rent" Values="1200" Fill="LightGreen" />
-                    <lvc:PieSeries Title="Entertainment" Values="300" Fill="LightBlue" />
-                </lvc:PieChart.Series>
-            </lvc:PieChart>
+            <!-- Bar Chart -->
+            <StackPanel Grid.Column="0" Margin="10">
+                <TextBlock Text="Income vs Expenses (Last Month)" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                <lvc:CartesianChart x:Name="IncomeExpensesChart" Background="#333333" Height="400" />
+            </StackPanel>
+
+            <!-- Recent Transactions -->
+            <StackPanel Grid.Column="1" Margin="10">
+                <TextBlock Text="Recent Transactions" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="RecentActivityList" />
+                </ScrollViewer>
+            </StackPanel>
         </Grid>
+
+        <!-- Hover Popup for Transactions -->
+        <Popup x:Name="TransactionPopup" Placement="Mouse" AllowsTransparency="True" PopupAnimation="Fade">
+            <Border Background="#333333" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="10">
+                <TextBlock x:Name="PopupText" Foreground="White" FontSize="14" TextWrapping="Wrap" />
+            </Border>
+        </Popup>
+
     </Grid>
 </Page>
