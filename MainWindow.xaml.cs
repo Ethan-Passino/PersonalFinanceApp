@@ -1,10 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PersonalFinanceApp
 {
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance => Application.Current.MainWindow as MainWindow;
         public MainWindow()
         {
             InitializeComponent();
@@ -47,6 +51,46 @@ namespace PersonalFinanceApp
         private void NavigateToRecords(object sender, RoutedEventArgs e)
         {
             DynamicContentFrame.Navigate(new RecordsPage());
+        }
+
+        public void ShowNotification(string message, string type)
+        {            // Create a new NotificationControl
+            var notification = new NotificationControl
+            {
+                Message = message
+            };
+
+            // Set the background color based on the type
+            SolidColorBrush backgroundColor;
+            if (type == "Error")
+            {
+                backgroundColor = new SolidColorBrush(Color.FromRgb(168, 50, 50)); // Dark Red
+            }
+            else if (type == "Info")
+            {
+                backgroundColor = new SolidColorBrush(Color.FromRgb(50, 92, 168)); // Dark Blue
+            }
+            else if (type == "Success")
+            {
+                backgroundColor = new SolidColorBrush(Color.FromRgb(50, 168, 82)); // Dark Green
+            }
+            else
+            {
+                backgroundColor = new SolidColorBrush(Color.FromRgb(50, 50, 50)); // Default Dark Grey
+            }
+            notification.BackgroundColor = backgroundColor;
+
+            // Add the notification to the panel
+            NotificationPanel.Children.Add(notification);
+
+            // Auto-remove notification after 5 seconds
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            timer.Tick += (s, e) =>
+            {
+                NotificationPanel.Children.Remove(notification);
+                timer.Stop();
+            };
+            timer.Start();
         }
 
     }

@@ -58,12 +58,14 @@ namespace PersonalFinanceApp
 
             // Clear form and confirm success
             ClearForm();
-            MessageBox.Show("Transaction saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            MainWindow.Instance.ShowNotification("Transaction saved successfully!", "Success");
+            //MessageBox.Show("Transaction saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void CancelTransaction(object sender, RoutedEventArgs e)
         {
             ClearForm();
+            MainWindow.Instance.ShowNotification("Transaction canceled.", "Info");
         }
 
         private void ClearForm()
