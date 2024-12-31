@@ -38,28 +38,30 @@ namespace PersonalFinanceApp
             }
 
             // Save to SQLite database
-            string connectionString = "Data Source=PersonalFinance.db;Version=3;";
-            using (var connection = new SQLiteConnection(connectionString))
+            try
             {
-                connection.Open();
-                var command = new SQLiteCommand(connection)
-                {
-                    CommandText = @"
-                        INSERT INTO Transactions (Amount, Category, Date, Description)
-                        VALUES (@amount, @category, @date, @description);
-                    "
-                };
-                command.Parameters.AddWithValue("@amount", amount);
-                command.Parameters.AddWithValue("@category", category);
-                command.Parameters.AddWithValue("@date", date.Value.ToString("yyyy-MM-dd"));
-                command.Parameters.AddWithValue("@description", description);
-                command.ExecuteNonQuery();
-            }
+                string query = @"
+                    INSERT INTO Transactions (Amount, Category, Date, Description)
+                    VALUES (@Amount, @Category, @Date, @Description);";
+                var parameters = new System.Collections.Generic.Dictionary<string, object>
+                    {
+                        { "@Amount", amount },
+                        { "@Category", category },
+                        { "@Date", date.Value.ToString("yyyy-MM-dd") },
+                        { "@Description", description }
+                    };
 
-            // Clear form and confirm success
-            ClearForm();
-            MainWindow.Instance.ShowNotification("Transaction saved successfully!", "Success");
-            //MessageBox.Show("Transaction saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                DatabaseHelper.ExecuteQuery(query, parameters);
+
+                // Clear form and confirm success
+                ClearForm();
+                MainWindow.Instance.ShowNotification("Transaction saved successfully!", "Success");
+            }
+            catch(Exception ex)
+            {
+                MainWindow.Instance.ShowNotification("Transaction couldn't be saved due to an error.", "Error");
+                Console.WriteLine($"{ex.Message}");
+            }
         }
 
         private void CancelTransaction(object sender, RoutedEventArgs e)

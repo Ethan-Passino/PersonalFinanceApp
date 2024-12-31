@@ -12,6 +12,7 @@ namespace PersonalFinanceApp
         public MainWindow()
         {
             InitializeComponent();
+            DatabaseHelper.InitializeDatabase();
 
             // Load the Dashboard by default
             DynamicContentFrame.Navigate(new DashboardPage());
