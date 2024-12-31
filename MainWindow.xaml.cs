@@ -54,30 +54,35 @@ namespace PersonalFinanceApp
             DynamicContentFrame.Navigate(new RecordsPage());
         }
 
-        public void ShowNotification(string message, string type)
+        public enum NotificationType
+        {
+            Error,
+            Success,
+            Info
+        }
+
+        public void ShowNotification(string message, NotificationType type)
         {            // Create a new NotificationControl
             var notification = new NotificationControl
             {
                 Message = message
             };
-
             // Set the background color based on the type
             SolidColorBrush backgroundColor;
-            if (type == "Error")
+            switch (type)
             {
-                backgroundColor = new SolidColorBrush(Color.FromRgb(168, 50, 50)); // Dark Red
-            }
-            else if (type == "Info")
-            {
-                backgroundColor = new SolidColorBrush(Color.FromRgb(50, 92, 168)); // Dark Blue
-            }
-            else if (type == "Success")
-            {
-                backgroundColor = new SolidColorBrush(Color.FromRgb(50, 168, 82)); // Dark Green
-            }
-            else
-            {
-                backgroundColor = new SolidColorBrush(Color.FromRgb(50, 50, 50)); // Default Dark Grey
+                case NotificationType.Error:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(168, 50, 50)); // Dark Red
+                    break;
+                case NotificationType.Success:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(50, 168, 82)); // Dark Green
+                    break;
+                case NotificationType.Info:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(50, 92, 168)); // Dark Blue
+                    break;
+                default:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(50, 50, 50)); // Default Dark Grey
+                    break;
             }
             notification.BackgroundColor = backgroundColor;
 

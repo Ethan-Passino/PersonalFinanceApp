@@ -23,17 +23,17 @@ namespace PersonalFinanceApp
             // Validate inputs
             if (string.IsNullOrWhiteSpace(amountText) || !decimal.TryParse(amountText, out decimal amount))
             {
-                MessageBox.Show("Please enter a valid amount.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MainWindow.Instance.ShowNotification("Please enter a valid amount.", MainWindow.NotificationType.Error);
                 return;
             }
             if (category == null)
             {
-                MessageBox.Show("Please select a category.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MainWindow.Instance.ShowNotification("Please select a category.", MainWindow.NotificationType.Error);
                 return;
             }
             if (date == null)
             {
-                MessageBox.Show("Please select a date.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MainWindow.Instance.ShowNotification("Please select a date.", MainWindow.NotificationType.Error);
                 return;
             }
 
@@ -55,11 +55,11 @@ namespace PersonalFinanceApp
 
                 // Clear form and confirm success
                 ClearForm();
-                MainWindow.Instance.ShowNotification("Transaction saved successfully!", "Success");
+                MainWindow.Instance.ShowNotification("Transaction saved successfully!", MainWindow.NotificationType.Success);
             }
             catch(Exception ex)
             {
-                MainWindow.Instance.ShowNotification("Transaction couldn't be saved due to an error.", "Error");
+                MainWindow.Instance.ShowNotification("Transaction couldn't be saved due to an error.", MainWindow.NotificationType.Error);
                 Console.WriteLine($"{ex.Message}");
             }
         }
@@ -67,7 +67,7 @@ namespace PersonalFinanceApp
         private void CancelTransaction(object sender, RoutedEventArgs e)
         {
             ClearForm();
-            MainWindow.Instance.ShowNotification("Transaction canceled.", "Info");
+            MainWindow.Instance.ShowNotification("Transaction canceled.", MainWindow.NotificationType.Info);
         }
 
         private void ClearForm()
