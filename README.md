@@ -30,7 +30,7 @@
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/YourUsername/PersonalFinanceApp.git
+   git clone https://github.com/EthanPassino/PersonalFinanceApp.git
    cd PersonalFinanceApp
 2. Open the solution file in Visual Studio 2022.
 
