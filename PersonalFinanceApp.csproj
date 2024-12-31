@@ -123,23 +123,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DashboardPage.xaml.cs">
+    <Compile Include="Views\DashboardPage.xaml.cs">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseHelper.cs" />
-    <Compile Include="NotificationControl.xaml.cs">
+    <Compile Include="Helpers\DatabaseHelper.cs" />
+    <Compile Include="Views\NotificationControl.xaml.cs">
       <DependentUpon>NotificationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RecordsPage.xaml.cs">
+    <Compile Include="Views\RecordsPage.xaml.cs">
       <DependentUpon>RecordsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PayStubPage.xaml.cs">
+    <Compile Include="Views\PayStubPage.xaml.cs">
       <DependentUpon>PayStubPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TransactionsPage.xaml.cs">
+    <Compile Include="Views\TransactionsPage.xaml.cs">
       <DependentUpon>TransactionsPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="DashboardPage.xaml">
+    <Page Include="Views\DashboardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,29 +155,29 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NotificationControl.xaml">
+    <Page Include="Views\NotificationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RecordsPage.xaml">
+    <Page Include="Views\RecordsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PayStubPage.xaml">
+    <Page Include="Views\PayStubPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ReportsPage.xaml">
+    <Page Include="Views\ReportsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TransactionsPage.xaml">
+    <Page Include="Views\TransactionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReportsPage.xaml.cs">
+    <Compile Include="Views\ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -217,6 +217,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
