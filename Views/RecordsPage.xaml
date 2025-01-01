@@ -26,123 +26,51 @@
             <!-- Transactions Section -->
             <StackPanel Grid.Column="0" Margin="10">
                 <TextBlock Text="Transactions" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Height="400">
-                    <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
-                              BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" AlternatingRowBackground="#383838">
-                        <DataGrid.Resources>
-                            <!-- Header Style -->
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="Black" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="FontWeight" Value="Bold" />
-                                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                                <Setter Property="BorderBrush" Value="Gray" />
-                            </Style>
-
-                            <!-- Row Style -->
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="#333333" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="Black" />
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-
-                            <!-- Cell Style -->
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="Background" Value="#333333" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="BorderThickness" Value="1" />
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <!-- When a cell is selected -->
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="Black" />
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Trigger>
-
-                                    <!-- When a cell is in edit mode -->
-                                    <Trigger Property="IsEditing" Value="True">
-                                        <Setter Property="Background" Value="#444444" />
-                                        <Setter Property="Foreground" Value="White" />
-                                        <Setter Property="BorderBrush" Value="Gray" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="2*" />
-                            <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="1*" />
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1.5*" />
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2.5*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+                <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
+                          BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
+                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Resources>
+                        <!-- Header Style -->
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Black" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="2*" />
+                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="1.5*" />
+                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1.5*" />
+                        <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
 
             <!-- Paystubs Section -->
             <StackPanel Grid.Column="1" Margin="10">
                 <TextBlock Text="Paystubs" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Height="400">
-                    <DataGrid x:Name="PaystubsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
-                              BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" AlternatingRowBackground="#383838">
-                        <DataGrid.Resources>
-                            <!-- Header Style -->
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="Black" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="FontWeight" Value="Bold" />
-                                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                                <Setter Property="BorderBrush" Value="Gray" />
-                            </Style>
-
-                            <!-- Row Style -->
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="#333333" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="Black" />
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-
-                            <!-- Cell Style -->
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="Background" Value="#333333" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="BorderThickness" Value="1" />
-                                <Setter Property="BorderBrush" Value="Gray" />
-                                <Style.Triggers>
-                                    <!-- When a cell is selected -->
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="Black" />
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Trigger>
-
-                                    <!-- When a cell is in edit mode -->
-                                    <Trigger Property="IsEditing" Value="True">
-                                        <Setter Property="Background" Value="#444444" />
-                                        <Setter Property="Foreground" Value="White" />
-                                        <Setter Property="BorderBrush" Value="Gray" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1.5*" />
-                            <DataGridTextColumn Header="Income" Binding="{Binding Income}" Width="1*" />
-                            <DataGridTextColumn Header="Employer/Source" Binding="{Binding Employer}" Width="2*" />
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2.5*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+                <DataGrid x:Name="PaystubsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
+                          BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
+                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Resources>
+                        <!-- Header Style -->
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Black" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1.5*" />
+                        <DataGridTextColumn Header="Income" Binding="{Binding Income}" Width="1.5*" />
+                        <DataGridTextColumn Header="Employer/Source" Binding="{Binding Employer}" Width="2*" />
+                        <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
         </Grid>
     </Grid>
