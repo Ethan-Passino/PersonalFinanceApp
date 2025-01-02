@@ -21,29 +21,33 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Income vs Expenses Summary -->
-            <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock Text="High-Level Summary" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                <Grid Margin="10,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="10">
-                        <TextBlock Text="Total Income" Foreground="LightGreen" FontSize="16" FontWeight="Bold" />
-                        <TextBlock x:Name="TotalIncome" Text="$0.00" Foreground="White" FontSize="24" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="10">
-                        <TextBlock Text="Total Expenses" Foreground="Red" FontSize="16" FontWeight="Bold" />
-                        <TextBlock x:Name="TotalExpenses" Text="$0.00" Foreground="White" FontSize="24" />
-                    </StackPanel>
-                </Grid>
+            <!-- High-Level Summary -->
+            <StackPanel Grid.Row="0" Margin="20" Orientation="Vertical" HorizontalAlignment="Center">
+                <!-- Income -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Total Income: " Foreground="LightGreen" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
+                    <TextBlock x:Name="TotalIncome" Text="$0.00" Foreground="White" FontSize="16" />
+                </StackPanel>
+
+                <!-- Expenses -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Total Expenses: " Foreground="Red" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
+                    <TextBlock x:Name="TotalExpenses" Text="$0.00" Foreground="White" FontSize="16" />
+                </StackPanel>
+
+                <!-- Net Income -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Net Income: " Foreground="LightBlue" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
+                    <TextBlock x:Name="NetIncome" Text="$0.00" Foreground="White" FontSize="16" />
+                </StackPanel>
             </StackPanel>
+
 
             <!-- Expense Breakdown Chart -->
             <StackPanel Grid.Column="1" Margin="10">
                 <TextBlock Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <lvc:PieChart x:Name="ExpenseBreakdownChart" Background="#333333" Height="300" />
+                <lvc:PieChart x:Name="ExpenseBreakdownChart" Background="#333333" Height="400" Width="400" />
+                <TextBlock x:Name="NoDataMessage" Text="No expense data available." Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
             </StackPanel>
         </Grid>
 
