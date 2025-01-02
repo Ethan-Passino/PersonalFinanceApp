@@ -30,7 +30,7 @@
                 <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
           BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
           AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto"
-          CellEditEnding="TransactionsGrid_CellEditEnding">
+          CellEditEnding="TransactionsGrid_CellEditEnding" LoadingRow="TransactionsGrid_LoadingRow" CanUserAddRows="False">
                     <DataGrid.Resources>
                         <!-- Header Style -->
                         <Style TargetType="DataGridColumnHeader">
@@ -65,7 +65,7 @@
                 <DataGrid x:Name="PaystubsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
                           BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
                           AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          CellEditEnding="PaystubsGrid_CellEditEnding">
+                          CellEditEnding="PaystubsGrid_CellEditEnding" LoadingRow="PaystubsGrid_LoadingRow" CanUserAddRows="False">
                     <DataGrid.Resources>
                         <!-- Header Style -->
                         <Style TargetType="DataGridColumnHeader">

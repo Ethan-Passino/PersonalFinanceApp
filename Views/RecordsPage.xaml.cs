@@ -44,6 +44,10 @@ namespace PersonalFinanceApp
 
                 foreach (DataRow row in transactionsTable.Rows)
                 {
+                    // Validate row data
+                    if (!IsRowValid(row, new[] { "Amount", "Category", "Date", "Description" }))
+                        continue;
+
                     Transactions.Add(new Transaction
                     {
                         Id = Convert.ToInt32(row["Id"]),
@@ -60,6 +64,10 @@ namespace PersonalFinanceApp
 
                 foreach (DataRow row in payStubsTable.Rows)
                 {
+                    // Validate row data
+                    if (!IsRowValid(row, new[] { "Income", "Date", "Employer", "Description" }))
+                        continue;
+
                     Paystubs.Add(new Paystub
                     {
                         Id = Convert.ToInt32(row["Id"]),
@@ -76,6 +84,20 @@ namespace PersonalFinanceApp
                 Console.WriteLine($"Error: {ex}");
             }
         }
+
+        /// <summary>
+        /// Checks if the specified DataRow has non-empty values for all specified columns.
+        /// </summary>
+        private bool IsRowValid(DataRow row, string[] columns)
+        {
+            foreach (var column in columns)
+            {
+                if (row.IsNull(column) || string.IsNullOrWhiteSpace(row[column]?.ToString()))
+                    return false;
+            }
+            return true;
+        }
+
 
         // Sends a confirmation message
         private MessageBoxResult getConfirmation(string info)
@@ -336,6 +358,36 @@ namespace PersonalFinanceApp
             {
                 MainWindow.Instance.ShowNotification($"Error updating paystub: {ex.Message}", NotificationType.Error);
                 Console.WriteLine($"Error: {ex}");
+            }
+        }
+
+        private void TransactionsGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            // Validate the row data
+            if (e.Row.Item is Transaction transaction)
+            {
+                if (string.IsNullOrWhiteSpace(transaction.Category) ||
+                    string.IsNullOrWhiteSpace(transaction.Date) ||
+                    string.IsNullOrWhiteSpace(transaction.Description))
+                {
+                    // Remove invalid rows from the source
+                    Transactions.Remove(transaction);
+                }
+            }
+        }
+
+        private void PaystubsGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            // Validate the row data
+            if (e.Row.Item is Paystub paystub)
+            {
+                if (string.IsNullOrWhiteSpace(paystub.Date) ||
+                    string.IsNullOrWhiteSpace(paystub.Employer) ||
+                    string.IsNullOrWhiteSpace(paystub.Description))
+                {
+                    // Remove invalid rows from the source
+                    Paystubs.Remove(paystub);
+                }
             }
         }
 
