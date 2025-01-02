@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static PersonalFinanceApp.MainWindow;
@@ -76,9 +77,21 @@ namespace PersonalFinanceApp
             }
         }
 
+        // Sends a confirmation message
+        private MessageBoxResult getConfirmation(string info)
+        {
+            return MessageBox.Show(info,
+            "Confirm Delete",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+        }
+
         private void DeleteTransaction(Transaction transaction)
         {
             if (transaction == null) return;
+
+            // Show Confirmation Dialog
+            if (getConfirmation($"Are you sure that you want to delete the transaction: {transaction.Description}?") == MessageBoxResult.No) return;
 
             try
             {
@@ -102,6 +115,9 @@ namespace PersonalFinanceApp
         private void DeletePaystub(Paystub paystub)
         {
             if (paystub == null) return;
+
+            // Show Confirmation Dialog
+            if (getConfirmation($"Are you sure that you want to delete the paystub from {paystub.Employer}?") == MessageBoxResult.No) return;
 
             try
             {
