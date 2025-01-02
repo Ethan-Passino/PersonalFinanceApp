@@ -28,7 +28,8 @@
                 <TextBlock Text="Transactions" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
                 <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
                           BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
-                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          CellEditEnding="TransactionsGrid_CellEditEnding">
                     <DataGrid.Resources>
                         <!-- Header Style -->
                         <Style TargetType="DataGridColumnHeader">
@@ -53,7 +54,8 @@
                 <TextBlock Text="Paystubs" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
                 <DataGrid x:Name="PaystubsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
                           BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
-                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          CellEditEnding="PaystubsGrid_CellEditEnding">
                     <DataGrid.Resources>
                         <!-- Header Style -->
                         <Style TargetType="DataGridColumnHeader">
