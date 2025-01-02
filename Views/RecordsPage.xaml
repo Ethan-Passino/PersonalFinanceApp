@@ -26,10 +26,11 @@
             <!-- Transactions Section -->
             <StackPanel Grid.Column="0" Margin="10">
                 <TextBlock Text="Transactions" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+                <!-- Transactions Section -->
                 <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" Background="#333333" Foreground="White"
-                          BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
-                          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          CellEditEnding="TransactionsGrid_CellEditEnding">
+          BorderBrush="Gray" GridLinesVisibility="Horizontal" RowBackground="#444444" 
+          AlternatingRowBackground="#383838" ScrollViewer.VerticalScrollBarVisibility="Auto"
+          CellEditEnding="TransactionsGrid_CellEditEnding">
                     <DataGrid.Resources>
                         <!-- Header Style -->
                         <Style TargetType="DataGridColumnHeader">
@@ -45,8 +46,17 @@
                         <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="1.5*" />
                         <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1.5*" />
                         <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+                        <DataGridTemplateColumn Header="Actions">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                            CommandParameter="{Binding}" Background="Red" Foreground="White" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+
             </StackPanel>
 
             <!-- Paystubs Section -->
@@ -71,6 +81,14 @@
                         <DataGridTextColumn Header="Income" Binding="{Binding Income}" Width="1.5*" />
                         <DataGridTextColumn Header="Employer/Source" Binding="{Binding Employer}" Width="2*" />
                         <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+                        <DataGridTemplateColumn Header="Actions">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Command="{Binding DataContext.DeletePaystubCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                            CommandParameter="{Binding}" Background="Red" Foreground="White" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

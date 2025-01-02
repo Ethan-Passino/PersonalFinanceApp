@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Windows.Controls;
+using System.Windows.Input;
 using static PersonalFinanceApp.MainWindow;
 
 namespace PersonalFinanceApp
@@ -11,12 +12,18 @@ namespace PersonalFinanceApp
     {
         public ObservableCollection<Transaction> Transactions { get; set; }
         public ObservableCollection<Paystub> Paystubs { get; set; }
+        
         private bool isEditingTransaction = false;
         private bool isEditingPaystub = false;
+
+        public ICommand DeleteTransactionCommand { get; }
+        public ICommand DeletePaystubCommand { get; }
 
         public RecordsPage()
         {
             InitializeComponent();
+            DeleteTransactionCommand = new RelayCommand<Transaction>(transaction => DeleteTransaction(transaction));
+            DeletePaystubCommand = new RelayCommand<Paystub>(paystub => DeletePaystub(paystub));
             Transactions = new ObservableCollection<Transaction>();
             Paystubs = new ObservableCollection<Paystub>();
             DataContext = this;
@@ -65,6 +72,52 @@ namespace PersonalFinanceApp
             catch (Exception ex)
             {
                 MainWindow.Instance.ShowNotification($"Error loading data: {ex.Message}", NotificationType.Error);
+                Console.WriteLine($"Error: {ex}");
+            }
+        }
+
+        private void DeleteTransaction(Transaction transaction)
+        {
+            if (transaction == null) return;
+
+            try
+            {
+                // Delete from database
+                string query = "DELETE FROM Transactions WHERE Id = @Id";
+                var parameters = new Dictionary<string, object> { { "@Id", transaction.Id } };
+                DatabaseHelper.ExecuteNonQuery(query, parameters);
+
+                // Remove from ObservableCollection
+                Transactions.Remove(transaction);
+
+                MainWindow.Instance.ShowNotification("Transaction deleted successfully!", NotificationType.Success);
+            }
+            catch (Exception ex)
+            {
+                MainWindow.Instance.ShowNotification($"Error deleting transaction: {ex.Message}", NotificationType.Error);
+                Console.WriteLine($"Error: {ex}");
+            }
+        }
+
+        private void DeletePaystub(Paystub paystub)
+        {
+            if (paystub == null) return;
+
+            try
+            {
+                // Delete from database
+                string query = "DELETE FROM Paystubs WHERE Id = @Id";
+                var parameters = new Dictionary<string, object> { { "@Id", paystub.Id } };
+                DatabaseHelper.ExecuteNonQuery(query, parameters);
+
+                // Remove from ObservableCollection
+                Paystubs.Remove(paystub);
+
+                MainWindow.Instance.ShowNotification("Paystub deleted successfully!", NotificationType.Success);
+            }
+            catch (Exception ex)
+            {
+                MainWindow.Instance.ShowNotification($"Error deleting paystub: {ex.Message}", NotificationType.Error);
                 Console.WriteLine($"Error: {ex}");
             }
         }
@@ -288,6 +341,36 @@ namespace PersonalFinanceApp
             public string Employer { get; set; }
             public string Description { get; set; }
         }
+
+
+        public class RelayCommand<T> : ICommand
+        {
+            private readonly Action<T> _execute;
+            private readonly Predicate<T> _canExecute;
+
+            public RelayCommand(Action<T> execute, Predicate<T> canExecute = null)
+            {
+                _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+                _canExecute = canExecute;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return _canExecute == null || _canExecute((T)parameter);
+            }
+
+            public void Execute(object parameter)
+            {
+                _execute((T)parameter);
+            }
+
+            public event EventHandler CanExecuteChanged
+            {
+                add { CommandManager.RequerySuggested += value; }
+                remove { CommandManager.RequerySuggested -= value; }
+            }
+        }
+
 
     }
 }
