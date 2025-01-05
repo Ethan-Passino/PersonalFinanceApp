@@ -58,7 +58,8 @@ namespace PersonalFinanceApp
         {
             Error,
             Success,
-            Info
+            Info,
+            Warning
         }
 
         public void ShowNotification(string message, NotificationType type)
@@ -79,6 +80,9 @@ namespace PersonalFinanceApp
                     break;
                 case NotificationType.Info:
                     backgroundColor = new SolidColorBrush(Color.FromRgb(50, 92, 168)); // Dark Blue
+                    break;
+                case NotificationType.Warning:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(255, 255, 0)); // Yellow
                     break;
                 default:
                     backgroundColor = new SolidColorBrush(Color.FromRgb(50, 50, 50)); // Default Dark Grey
