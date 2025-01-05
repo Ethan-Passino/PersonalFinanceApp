@@ -54,11 +54,7 @@
                 <TextBlock Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
                 <TextBlock Text="This graph shows your income and expenses trends over the last month." 
                Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,0" />
-                <lvc:CartesianChart x:Name="IncomeExpensesChart" 
-                    Background="#333333" 
-                    VerticalAlignment="Stretch" 
-                    HorizontalAlignment="Stretch" 
-                    Height="500" />
+                <lvc:PieChart x:Name="ExpenseBreakdownChart" Margin="0, 115, 0, 10" Height="400" VerticalAlignment="Stretch" RenderTransformOrigin="0.457,1.388"/>
                 <TextBlock x:Name="NoDataMessage" Text="No expense data available." Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
             </StackPanel>
         </Grid>
