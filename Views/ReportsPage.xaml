@@ -4,97 +4,114 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       Title="Reports">
     <Grid Background="#1E1E1E">
+        <!-- Define Rows for Layout -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <!-- Page Title -->
             <RowDefinition Height="Auto" />
-            <!-- Time Frame Selector -->
+            <!-- Date Range Selector -->
             <RowDefinition Height="Auto" />
             <!-- Summary Section -->
             <RowDefinition Height="*" />
-            <!-- Charts Section -->
+            <!-- Scrollable Graphs -->
         </Grid.RowDefinitions>
 
         <!-- Page Title -->
         <TextBlock Text="Reports and Analytics" Foreground="White" FontSize="24" FontWeight="Bold" 
                    HorizontalAlignment="Center" Margin="0,20" />
 
-        <!-- Time Frame Selector and Download Button -->
+        <!-- Date Range Selector -->
         <StackPanel Grid.Row="1" Margin="0,10" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="View by:" Foreground="White" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" />
-            <ComboBox x:Name="TimeFrameSelector" FontSize="14" Width="250"
-                      Foreground="White" Background="#333333" BorderBrush="Gray">
-                <!-- Dropdown Items -->
-                <ComboBoxItem Content="January" />
-                <ComboBoxItem Content="February" />
-                <ComboBoxItem Content="March" />
-                <ComboBoxItem Content="April" />
-                <ComboBoxItem Content="May" />
-                <ComboBoxItem Content="June" />
-                <ComboBoxItem Content="July" />
-                <ComboBoxItem Content="August" />
-                <ComboBoxItem Content="September" />
-                <ComboBoxItem Content="October" />
-                <ComboBoxItem Content="November" />
-                <ComboBoxItem Content="December" />
-                <ComboBoxItem Content="Last 3 Months" />
-                <ComboBoxItem Content="Last 6 Months" />
-                <ComboBoxItem Content="Last 9 Months" />
-                <ComboBoxItem Content="Full Year" />
-                <ComboBoxItem Content="Total" />
+            <TextBlock Text="Select Date Range:" Foreground="White" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" />
 
-                <!-- Style for the ComboBox -->
-                <ComboBox.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#333333" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#007ACC" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White" />
-                </ComboBox.Resources>
-
-                <ComboBox.Style>
-                    <Style TargetType="ComboBox">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ComboBox">
-                                    <Grid>
-                                        <Border Name="ContentBorder" Background="#333333" BorderBrush="Gray" BorderThickness="1">
-                                            <ContentPresenter Content="{TemplateBinding SelectionBoxItem}" 
-                                                              VerticalAlignment="Center"
-                                                              HorizontalAlignment="Left"
-                                                              Margin="5,2" />
+            <!-- Start Date -->
+            <StackPanel Margin="0,0,10,0">
+                <TextBlock Text="Start Date" Foreground="White" FontSize="14" />
+                <DatePicker x:Name="StartDatePicker" FontSize="14" HorizontalAlignment="Stretch" SelectedDateChanged="OnDateChanged">
+                    <DatePicker.Resources>
+                        <!-- Style for the DatePicker TextBox -->
+                        <Style TargetType="DatePickerTextBox">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="#333333" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="Padding" Value="5,2" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DatePickerTextBox">
+                                        <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="2">
+                                            <ScrollViewer Margin="0" x:Name="PART_ContentHost" Foreground="White" />
                                         </Border>
-                                        <ToggleButton Name="DropDownToggle" 
-                                                      Focusable="False" 
-                                                      IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                      Background="#333333" 
-                                                      Foreground="White" 
-                                                      BorderBrush="Gray" 
-                                                      BorderThickness="1" 
-                                                      HorizontalAlignment="Right"
-                                                      Width="30" 
-                                                      VerticalAlignment="Stretch">
-                                            <Path Data="M 0 0 L 8 8 L 16 0 Z" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </ToggleButton>
-                                        <Popup Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" Focusable="False" AllowsTransparency="True" PopupAnimation="Slide">
-                                            <Border Background="#333333" BorderBrush="Gray" BorderThickness="1" Width="{TemplateBinding ActualWidth}">
-                                                <ScrollViewer>
-                                                    <StackPanel>
-                                                        <ItemsPresenter />
-                                                    </StackPanel>
-                                                </ScrollViewer>
-                                            </Border>
-                                        </Popup>
-                                    </Grid>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ComboBox.Style>
-            </ComboBox>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        <!-- Style for the Popup Calendar -->
+                        <Style TargetType="Calendar">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="#333333" />
+                        </Style>
+
+                        <!-- Style for DatePicker -->
+                        <Style TargetType="DatePicker">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="#333333" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                        </Style>
+                    </DatePicker.Resources>
+                </DatePicker>
+            </StackPanel>
+
+            <!-- End Date -->
+            <StackPanel Margin="0,0,10,0">
+                <TextBlock Text="End Date" Foreground="White" FontSize="14" />
+                <DatePicker x:Name="EndDatePicker" FontSize="14" HorizontalAlignment="Stretch" SelectedDateChanged="OnDateChanged">
+                    <DatePicker.Resources>
+                        <!-- Style for the DatePicker TextBox -->
+                        <Style TargetType="DatePickerTextBox">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="#333333" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="Padding" Value="5,2" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DatePickerTextBox">
+                                        <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="2">
+                                            <ScrollViewer Margin="0" x:Name="PART_ContentHost" Foreground="White" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        <!-- Style for the Popup Calendar -->
+                        <Style TargetType="Calendar">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="#333333" />
+                        </Style>
+
+                        <!-- Style for DatePicker -->
+                        <Style TargetType="DatePicker">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="#333333" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                        </Style>
+                    </DatePicker.Resources>
+                </DatePicker>
+            </StackPanel>
 
             <Button Content="Download CSV" Width="150" Height="40" Margin="10"
-            Style="{StaticResource DarkThemeButton}" Click="OnDownloadCsv" />
+            Style="{StaticResource DarkThemeButton}" Click="OnDownloadCsv"/>
         </StackPanel>
+
 
         <!-- Summary Section -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
@@ -107,38 +124,43 @@
                 <TextBlock x:Name="TotalExpenses" Text="$0.00" Foreground="Red" FontSize="16" />
             </StackPanel>
             <StackPanel Margin="20">
-                <TextBlock Text="Remaining Balance" Foreground="White" FontSize="18" FontWeight="Bold" />
-                <TextBlock x:Name="RemainingBalance" Text="$0.00" Foreground="LightBlue" FontSize="16" />
+                <TextBlock Text="Net Income" Foreground="White" FontSize="18" FontWeight="Bold" />
+                <TextBlock x:Name="NetIncome" Text="$0.00" Foreground="Yellow" FontSize="16" />
             </StackPanel>
         </StackPanel>
 
-        <!-- Charts Section -->
-        <Grid Grid.Row="3" Margin="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
+        <!-- Scrollable Graphs Section -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="20">
+            <StackPanel>
+                <!-- Graph 1 -->
+                <StackPanel Margin="10">
+                    <TextBlock Text="Income vs Expenses Over Time" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                    <TextBlock Text="This graph compares income and expenses trends over the selected period."
+                               Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <Border Background="#333333" CornerRadius="5" Padding="10">
+                        <lvc:CartesianChart x:Name="IncomeExpensesChart" Background="#333333" VerticalAlignment="Stretch" Margin="10,0,10,10" Height="300">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Title="Date" Foreground="White" />
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis Title="Amount ($)" Foreground="White" LabelFormatter="{Binding}" MinValue="0"/>
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
 
-            <!-- Bar Chart -->
-            <Grid Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock Text="Income vs Expenses" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <lvc:CartesianChart x:Name="IncomeExpensesChart" Background="#333333" VerticalAlignment="Stretch" 
-                                    HorizontalAlignment="Stretch" Margin="0,20">
-                    <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="Time Period" Foreground="White" />
-                    </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Title="Amount ($)" Foreground="White" />
-                    </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>
-            </Grid>
+                    </Border>
+                </StackPanel>
 
-            <!-- Pie Chart -->
-            <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TextBlock Text="Expense Breakdown" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <lvc:PieChart x:Name="ExpenseBreakdownChart" Background="#333333" VerticalAlignment="Stretch" 
-                              HorizontalAlignment="Stretch" Margin="0,20" />
-            </Grid>
-        </Grid>
+                <!-- Graph 2 -->
+                <StackPanel Margin="10">
+                    <TextBlock Text="Expense Breakdown" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                    <TextBlock Text="This pie chart shows the proportion of expenses by category."
+                               Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <Border Background="#333333" CornerRadius="5" Padding="10">
+                        <lvc:PieChart x:Name="ExpenseBreakdownChart" Height="300" />
+                    </Border>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

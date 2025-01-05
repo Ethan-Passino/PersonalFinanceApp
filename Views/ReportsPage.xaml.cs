@@ -1,46 +1,360 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using LiveCharts;
+using LiveCharts.Wpf;
 using Microsoft.Win32;
+using static PersonalFinanceApp.MainWindow;
 
 namespace PersonalFinanceApp
 {
     public partial class ReportsPage : Page
     {
+        private List<Transaction> Transactions;
+        private List<Paystub> Paystubs;
+
         public ReportsPage()
         {
             InitializeComponent();
+            LoadAllData();
         }
 
-        private void OnDownloadCsv(object sender, RoutedEventArgs e)
+        private void LoadAllData()
         {
-            // Placeholder for time frame selection
-            string selectedTimeFrame = (TimeFrameSelector.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Total";
-
-            // Open SaveFileDialog to pick save location
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            try
             {
-                Filter = "CSV files (*.csv)|*.csv",
-                Title = "Save Report Data",
-                FileName = $"Report_{selectedTimeFrame.Replace(" ", "_")}.csv"
-            };
+                Transactions = LoadTransactions();
+                Paystubs = LoadPaystubs();
 
-            if (saveFileDialog.ShowDialog() == true)
+                // Set default date range (current month)
+                var today = DateTime.Today;
+                StartDatePicker.SelectedDate = new DateTime(today.Year, today.Month, 1);
+                EndDatePicker.SelectedDate = today;
+
+                // Update reports with default range
+                UpdateReports();
+            }
+            catch (Exception ex)
             {
-                // Generate CSV data (replace with actual data generation logic)
-                string csvData = GenerateCsvData(selectedTimeFrame);
-
-                // Write the file
-                File.WriteAllText(saveFileDialog.FileName, csvData);
-
-                MessageBox.Show($"CSV file saved to {saveFileDialog.FileName}", "Download Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+                MainWindow.Instance.ShowNotification("Error loading data. Check console for details.", NotificationType.Error);
+                Console.WriteLine($"Error in LoadAllData: {ex.Message}");
             }
         }
 
-        private string GenerateCsvData(string timeFrame)
+        private List<Transaction> LoadTransactions()
         {
-            // Placeholder: Replace with actual logic to fetch and format data for the selected time frame
-            return "Category,Amount\nRent,1200\nFood,500\nGas,300\nEntertainment,200\nOther,800";
+            try
+            {
+                var query = "SELECT Id, Category, Amount, Date, Description FROM Transactions";
+                var transactionsTable = DatabaseHelper.ExecuteQuery(query);
+
+                return transactionsTable.AsEnumerable().Select(row => new Transaction
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Category = row["Category"].ToString(),
+                    Amount = row["Amount"].ToString(),
+                    Date = DateTime.Parse(row["Date"].ToString()), // Convert to DateTime
+                    Description = row["Description"].ToString()
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading transactions: {ex.Message}");
+                throw;
+            }
         }
+
+        private List<Paystub> LoadPaystubs()
+        {
+            try
+            {
+                var query = "SELECT Id, Date, Income, Employer, Description FROM Paystubs";
+                var paystubsTable = DatabaseHelper.ExecuteQuery(query);
+
+                return paystubsTable.AsEnumerable().Select(row => new Paystub
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Date = DateTime.Parse(row["Date"].ToString()), // Convert to DateTime
+                    Income = row["Income"].ToString(),
+                    Employer = row["Employer"].ToString(),
+                    Description = row["Description"].ToString()
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading paystubs: {ex.Message}");
+                throw;
+            }
+        }
+
+        private void UpdateReports()
+        {
+            try
+            {
+                if (StartDatePicker.SelectedDate == null || EndDatePicker.SelectedDate == null)
+                {
+                    MainWindow.Instance.ShowNotification("Please select a valid date range.", NotificationType.Warning);
+                    return;
+                }
+
+                DateTime startDate = StartDatePicker.SelectedDate.Value.Date;
+                DateTime endDate = EndDatePicker.SelectedDate.Value.Date.AddDays(1).AddTicks(-1);
+
+                if (startDate > endDate)
+                {
+                    MainWindow.Instance.ShowNotification("Start date cannot be after end date.", NotificationType.Error);
+                    return;
+                }
+
+                var filteredTransactions = Transactions
+                    .Where(t => t.Date >= startDate && t.Date <= endDate)
+                    .ToList();
+
+                var filteredPaystubs = Paystubs
+                    .Where(p => p.Date >= startDate && p.Date <= endDate)
+                    .ToList();
+
+                double totalIncome = filteredPaystubs.Sum(p => double.Parse(p.Income));
+                double totalExpenses = filteredTransactions.Sum(t => double.Parse(t.Amount));
+                double netIncome = totalIncome - totalExpenses;
+
+                TotalIncome.Text = $"${totalIncome:0.00}";
+                TotalExpenses.Text = $"${totalExpenses:0.00}";
+                NetIncome.Text = $"${netIncome:0.00}";
+
+                UpdateIncomeExpensesChart(filteredTransactions, filteredPaystubs);
+                UpdateExpenseBreakdownChart(filteredTransactions);
+            }
+            catch (Exception ex)
+            {
+                MainWindow.Instance.ShowNotification("An error occurred while updating the reports.", NotificationType.Error);
+                Console.WriteLine($"Error in UpdateReports: {ex.Message}");
+            }
+        }
+
+        private void OnDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                // Check if both start and end dates are selected
+                if (StartDatePicker.SelectedDate != null && EndDatePicker.SelectedDate != null)
+                {
+                    // Validate the date range
+                    DateTime startDate = StartDatePicker.SelectedDate.Value.Date;
+                    DateTime endDate = EndDatePicker.SelectedDate.Value.Date;
+
+                    if (startDate > endDate)
+                    {
+                        MainWindow.Instance.ShowNotification("Start date cannot be after the end date.", NotificationType.Error);
+                        return;
+                    }
+
+                    // Call the method to update reports and charts
+                    UpdateReports();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in OnDateChanged: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while updating the date range.", NotificationType.Error);
+            }
+        }
+
+
+        private void UpdateIncomeExpensesChart(List<Transaction> transactions, List<Paystub> paystubs)
+        {
+            try
+            {
+                var incomeData = paystubs
+                    .GroupBy(p => p.Date.Date)
+                    .ToDictionary(g => g.Key, g => g.Sum(p => double.Parse(p.Income)));
+
+                var expenseData = transactions
+                    .GroupBy(t => t.Date.Date)
+                    .ToDictionary(g => g.Key, g => g.Sum(t => double.Parse(t.Amount)));
+
+                var allDates = incomeData.Keys.Union(expenseData.Keys).OrderBy(date => date).ToList();
+
+                var incomeValues = new ChartValues<double>();
+                var expenseValues = new ChartValues<double>();
+
+                foreach (var date in allDates)
+                {
+                    incomeValues.Add(incomeData.ContainsKey(date) ? incomeData[date] : 0);
+                    expenseValues.Add(expenseData.ContainsKey(date) ? expenseData[date] : 0);
+                }
+
+                IncomeExpensesChart.Series = new SeriesCollection
+                {
+                    new LineSeries
+                    {
+                        Title = "Income",
+                        Values = incomeValues,
+                        StrokeThickness = 2,
+                        Fill = System.Windows.Media.Brushes.Transparent,
+                        PointGeometry = DefaultGeometries.Circle,
+                        PointGeometrySize = 5,
+                        Stroke = System.Windows.Media.Brushes.LightGreen
+                    },
+                    new LineSeries
+                    {
+                        Title = "Expenses",
+                        Values = expenseValues,
+                        StrokeThickness = 2,
+                        Fill = System.Windows.Media.Brushes.Transparent,
+                        PointGeometry = DefaultGeometries.Circle,
+                        PointGeometrySize = 5,
+                        Stroke = System.Windows.Media.Brushes.Red
+                    }
+                };
+
+                IncomeExpensesChart.AxisX.Clear();
+                IncomeExpensesChart.AxisX.Add(new Axis
+                {
+                    Title = "Date",
+                    Labels = allDates.Select(date => date.ToString("MMM dd")).ToList(),
+                    Separator = new LiveCharts.Wpf.Separator { Step = 1 }
+                });
+
+                IncomeExpensesChart.AxisY.Clear();
+                IncomeExpensesChart.AxisY.Add(new Axis
+                {
+                    Title = "Amount ($)",
+                    LabelFormatter = value => $"${value:N2}",
+                    MinValue = 0
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateIncomeExpensesChart: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while updating the income vs expenses chart.", NotificationType.Error);
+            }
+        }
+
+        private void UpdateExpenseBreakdownChart(List<Transaction> transactions)
+        {
+            try
+            {
+                // Group transactions by category and calculate total amounts
+                var categoryTotals = transactions
+                    .GroupBy(t => t.Category)
+                    .Select(g => new { Category = g.Key, Total = g.Sum(t => double.Parse(t.Amount)) })
+                    .Where(g => g.Total > 0) // Only include categories with non-zero totals
+                    .OrderByDescending(g => g.Total);
+
+                // Clear previous chart data
+                ExpenseBreakdownChart.Series = new SeriesCollection();
+
+                // Populate the PieChart with the calculated data
+                foreach (var category in categoryTotals)
+                {
+                    ExpenseBreakdownChart.Series.Add(new PieSeries
+                    {
+                        Title = category.Category,
+                        Values = new ChartValues<double> { category.Total },
+                        DataLabels = true // Enable labels to show values on the chart
+                    });
+                }
+
+                // Show "No data available" message if no categories are available
+                if (!categoryTotals.Any())
+                {
+                    MainWindow.Instance.ShowNotification("No expense data available for the selected date range.", NotificationType.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateExpenseBreakdownChart: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while updating the expense breakdown chart.", NotificationType.Error);
+            }
+        }
+
+
+        private void OnDownloadCsv(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (StartDatePicker.SelectedDate == null || EndDatePicker.SelectedDate == null)
+                {
+                    MainWindow.Instance.ShowNotification("Please select a valid date range.", NotificationType.Warning);
+                    return;
+                }
+
+                DateTime startDate = StartDatePicker.SelectedDate.Value.Date;
+                DateTime endDate = EndDatePicker.SelectedDate.Value.Date.AddDays(1).AddTicks(-1);
+
+                var filteredTransactions = Transactions.Where(t => t.Date >= startDate && t.Date <= endDate).ToList();
+                var filteredPaystubs = Paystubs.Where(p => p.Date >= startDate && p.Date <= endDate).ToList();
+
+                if (!filteredTransactions.Any() && !filteredPaystubs.Any())
+                {
+                    MainWindow.Instance.ShowNotification("No data available for the selected date range.", NotificationType.Warning);
+                    return;
+                }
+
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "CSV files (*.csv)|*.csv",
+                    Title = "Save Report Data",
+                    FileName = $"Report_{startDate:yyyy-MM-dd}_to_{endDate:yyyy-MM-dd}.csv"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string csvData = GenerateCsvData(filteredTransactions, filteredPaystubs);
+                    File.WriteAllText(saveFileDialog.FileName, csvData);
+                    MainWindow.Instance.ShowNotification("CSV file saved successfully!", NotificationType.Success);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in OnDownloadCsv: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while downloading the CSV.", NotificationType.Error);
+            }
+        }
+
+        private string GenerateCsvData(List<Transaction> transactions, List<Paystub> paystubs)
+        {
+            var csv = new List<string>
+            {
+                "Transactions:",
+                "Id,Category,Amount,Date,Description"
+            };
+
+            csv.AddRange(transactions.Select(t =>
+                $"{t.Id},{t.Category},{t.Amount},{t.Date:yyyy-MM-dd},{t.Description}"));
+
+            csv.Add(string.Empty);
+
+            csv.Add("Paystubs:");
+            csv.Add("Id,Date,Income,Employer,Description");
+            csv.AddRange(paystubs.Select(p =>
+                $"{p.Id},{p.Date:yyyy-MM-dd},{p.Income},{p.Employer},{p.Description}"));
+
+            return string.Join(Environment.NewLine, csv);
+        }
+
+    }
+
+    public class Transaction
+    {
+        public int Id { get; set; }
+        public string Category { get; set; }
+        public string Amount { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class Paystub
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string Income { get; set; }
+        public string Employer { get; set; }
+        public string Description { get; set; }
     }
 }
