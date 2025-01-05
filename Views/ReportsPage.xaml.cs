@@ -30,20 +30,29 @@ namespace PersonalFinanceApp
                 Transactions = LoadTransactions();
                 Paystubs = LoadPaystubs();
 
-                // Set default date range (current month)
-                var today = DateTime.Today;
-                StartDatePicker.SelectedDate = new DateTime(today.Year, today.Month, 1);
-                EndDatePicker.SelectedDate = today;
+                // If dates are not already set, default to the past month
+                if (ReportsPageState.StartDate == null || ReportsPageState.EndDate == null)
+                {
+                    var today = DateTime.Today;
+                    ReportsPageState.EndDate = today;
+                    ReportsPageState.StartDate = today.AddMonths(-1); // Start date is one month earlier
+                }
 
-                // Update reports with default range
+                // Set the date pickers to the stored dates
+                StartDatePicker.SelectedDate = ReportsPageState.StartDate;
+                EndDatePicker.SelectedDate = ReportsPageState.EndDate;
+
+                // Update reports with the selected range
                 UpdateReports();
             }
             catch (Exception ex)
             {
                 MainWindow.Instance.ShowNotification("Error loading data. Check console for details.", NotificationType.Error);
-                Console.WriteLine($"Error in LoadAllData: {ex.Message}");
+                Console.WriteLine(ex.Message);
             }
         }
+
+
 
         private List<Transaction> LoadTransactions()
         {
@@ -138,31 +147,14 @@ namespace PersonalFinanceApp
 
         private void OnDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (StartDatePicker.SelectedDate != null && EndDatePicker.SelectedDate != null)
             {
-                // Check if both start and end dates are selected
-                if (StartDatePicker.SelectedDate != null && EndDatePicker.SelectedDate != null)
-                {
-                    // Validate the date range
-                    DateTime startDate = StartDatePicker.SelectedDate.Value.Date;
-                    DateTime endDate = EndDatePicker.SelectedDate.Value.Date;
-
-                    if (startDate > endDate)
-                    {
-                        MainWindow.Instance.ShowNotification("Start date cannot be after the end date.", NotificationType.Error);
-                        return;
-                    }
-
-                    // Call the method to update reports and charts
-                    UpdateReports();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in OnDateChanged: {ex.Message}");
-                MainWindow.Instance.ShowNotification("An error occurred while updating the date range.", NotificationType.Error);
+                ReportsPageState.StartDate = StartDatePicker.SelectedDate;
+                ReportsPageState.EndDate = EndDatePicker.SelectedDate;
+                UpdateReports();
             }
         }
+
 
 
         private void UpdateIncomeExpensesChart(List<Transaction> transactions, List<Paystub> paystubs)
@@ -357,4 +349,11 @@ namespace PersonalFinanceApp
         public string Employer { get; set; }
         public string Description { get; set; }
     }
+
+    public static class ReportsPageState
+    {
+        public static DateTime? StartDate { get; set; } = null;
+        public static DateTime? EndDate { get; set; } = null;
+    }
+
 }
