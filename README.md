@@ -54,9 +54,6 @@
 - **📽️ Demo GIF**  
   *A short demo GIF showcasing the app in action will be added soon!*  
 
-- **🔔 Improved Notifications**  
-  More customizations and interactivity for notifications.  
-
 - **📅 Advanced Filters**  
   Filter records by custom date ranges and categories.  
 
