@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using LiveCharts.Wpf;
+using LiveCharts;
 using static PersonalFinanceApp.MainWindow;
 
 namespace PersonalFinanceApp
@@ -16,6 +18,7 @@ namespace PersonalFinanceApp
             CalculateTotals();
             LoadRecentTransactions();
             LoadExpenseBreakdown();
+            LoadIncomeExpensesChart();
         }
 
         private void LoadRecentTransactions()
@@ -218,6 +221,85 @@ namespace PersonalFinanceApp
             }
         }
 
+        private void LoadIncomeExpensesChart()
+        {
+            try
+            {
+                // Query to get Income and Expenses grouped by Date
+                string incomeQuery = "SELECT Date, SUM(Income) as TotalIncome FROM Paystubs GROUP BY Date;";
+                string expenseQuery = "SELECT Date, SUM(Amount) as TotalExpense FROM Transactions GROUP BY Date;";
+
+                var incomeTable = DatabaseHelper.ExecuteQuery(incomeQuery);
+                var expenseTable = DatabaseHelper.ExecuteQuery(expenseQuery);
+
+                // Process Data into Dictionaries for plotting
+                var incomeData = incomeTable.AsEnumerable()
+                    .ToDictionary(row => DateTime.Parse(row["Date"].ToString()), row => Convert.ToDouble(row["TotalIncome"]));
+
+                var expenseData = expenseTable.AsEnumerable()
+                    .ToDictionary(row => DateTime.Parse(row["Date"].ToString()), row => Convert.ToDouble(row["TotalExpense"]));
+
+                // Merge Dates from both data sources
+                var allDates = incomeData.Keys.Union(expenseData.Keys).OrderBy(date => date).ToList();
+
+                // Prepare Values for Chart
+                var incomeValues = new ChartValues<double>();
+                var expenseValues = new ChartValues<double>();
+
+                foreach (var date in allDates)
+                {
+                    incomeValues.Add(incomeData.ContainsKey(date) ? incomeData[date] : 0);
+                    expenseValues.Add(expenseData.ContainsKey(date) ? expenseData[date] : 0);
+                }
+
+                // Create Chart Series
+                IncomeExpensesChart.Series = new SeriesCollection
+                {
+                    new LineSeries
+                    {
+                        Title = "Income",
+                        Values = incomeValues,
+                        StrokeThickness = 2,
+                        Fill = System.Windows.Media.Brushes.Transparent,
+                        PointGeometry = DefaultGeometries.Circle,
+                        PointGeometrySize = 5,
+                        Stroke = System.Windows.Media.Brushes.LightGreen
+                    },
+                    new LineSeries
+                    {
+                        Title = "Expenses",
+                        Values = expenseValues,
+                        StrokeThickness = 2,
+                        Fill = System.Windows.Media.Brushes.Transparent,
+                        PointGeometry = DefaultGeometries.Circle,
+                        PointGeometrySize = 5,
+                        Stroke = System.Windows.Media.Brushes.Red
+                    }
+                };
+
+                // Configure X-Axis as Date
+                IncomeExpensesChart.AxisX.Clear();
+                IncomeExpensesChart.AxisX.Add(new Axis
+                {
+                    Title = "Date",
+                    Labels = allDates.Select(date => date.ToString("MMM dd")).ToList(),
+                    Separator = new LiveCharts.Wpf.Separator { Step = 1 }
+                });
+
+                // Configure Y-Axis
+                IncomeExpensesChart.AxisY.Clear();
+                IncomeExpensesChart.AxisY.Add(new Axis
+                {
+                    Title = "Amount ($)",
+                    LabelFormatter = value => $"${value:N2}"
+                });
+            }
+            catch (Exception ex)
+            {
+                MainWindow.Instance.ShowNotification($"Error loading chart data: {ex.Message}", NotificationType.Error);
+                Console.WriteLine(ex.ToString());
+            }
+        }
 
 
         public class Transaction

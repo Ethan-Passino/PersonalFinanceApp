@@ -9,8 +9,6 @@
             <RowDefinition Height="Auto" />
             <!-- High-Level Summary -->
             <RowDefinition Height="*" />
-            <!-- Charts and Transactions -->
-            <RowDefinition Height="Auto" />
             <!-- Buttons -->
         </Grid.RowDefinitions>
 
@@ -21,27 +19,35 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <!-- High-Level Summary -->
-            <StackPanel Grid.Row="0" Margin="20" Orientation="Vertical" HorizontalAlignment="Center">
-                <!-- Income -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="Total Income: " Foreground="LightGreen" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
-                    <TextBlock x:Name="TotalIncome" Text="$0.00" Foreground="White" FontSize="16" />
-                </StackPanel>
+            <!-- Income vs Expenses Summary -->
+            <StackPanel Grid.Column="0" Margin="10">
+                <TextBlock Text="High-Level Summary" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+                <Grid Margin="10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <TextBlock Text="Total Income" Foreground="LightGreen" FontSize="16" FontWeight="Bold" />
+                        <TextBlock x:Name="TotalIncome" Text="$0.00" Foreground="White" FontSize="24" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="10">
+                        <TextBlock Text="Total Expenses" Foreground="Red" FontSize="16" FontWeight="Bold" />
+                        <TextBlock x:Name="TotalExpenses" Text="$0.00" Foreground="White" FontSize="24" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Margin="10">
+                        <TextBlock Text="Net Income" Foreground="Yellow" FontSize="16" FontWeight="Bold" />
+                        <TextBlock x:Name="NetIncome" Text="$0.00" Foreground="White" FontSize="24" />
+                    </StackPanel>
+                </Grid>
 
-                <!-- Expenses -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="Total Expenses: " Foreground="Red" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
-                    <TextBlock x:Name="TotalExpenses" Text="$0.00" Foreground="White" FontSize="16" />
-                </StackPanel>
-
-                <!-- Net Income -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="Net Income: " Foreground="LightBlue" FontSize="16" FontWeight="Bold" Margin="0,0,10,0" />
-                    <TextBlock x:Name="NetIncome" Text="$0.00" Foreground="White" FontSize="16" />
+                <!-- Bar Chart -->
+                <StackPanel Margin="10" VerticalAlignment="Stretch">
+                    <TextBlock Text="Income vs Expenses" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,10,0,10" />
+                    <lvc:CartesianChart x:Name="IncomeExpensesChart" Background="#333333" VerticalAlignment="Stretch" Height="400"/>
                 </StackPanel>
             </StackPanel>
-
 
             <!-- Expense Breakdown Chart -->
             <StackPanel Grid.Column="1" Margin="10">
@@ -51,23 +57,15 @@
             </StackPanel>
         </Grid>
 
-        <!-- Charts and Transactions Section -->
+        <!-- Recent Transactions Section -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Bar Chart -->
-            <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock Text="Income vs Expenses (Last Month)" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <lvc:CartesianChart x:Name="IncomeExpensesChart" Background="#333333" Height="400" />
-            </StackPanel>
-
-            <!-- Recent Transactions -->
-            <StackPanel Grid.Column="1" Margin="10">
+            <StackPanel Margin="10">
                 <TextBlock Text="Recent Transactions" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Height="400">
                     <StackPanel x:Name="RecentActivityList" />
                 </ScrollViewer>
             </StackPanel>
@@ -79,6 +77,5 @@
                 <TextBlock x:Name="PopupText" Foreground="White" FontSize="14" TextWrapping="Wrap" />
             </Border>
         </Popup>
-
     </Grid>
 </Page>
