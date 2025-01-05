@@ -21,7 +21,7 @@
 
             <!-- Income vs Expenses Summary -->
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock Text="High-Level Summary" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+                <TextBlock Text="High-Level Summary" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
                 <Grid Margin="10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
@@ -51,8 +51,14 @@
 
             <!-- Expense Breakdown Chart -->
             <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <lvc:PieChart x:Name="ExpenseBreakdownChart" Background="#333333" Height="400" Width="400" />
+                <TextBlock Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
+                <TextBlock Text="This graph shows your income and expenses trends over the last month." 
+               Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,0" />
+                <lvc:CartesianChart x:Name="IncomeExpensesChart" 
+                    Background="#333333" 
+                    VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Stretch" 
+                    Height="500" />
                 <TextBlock x:Name="NoDataMessage" Text="No expense data available." Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
             </StackPanel>
         </Grid>
