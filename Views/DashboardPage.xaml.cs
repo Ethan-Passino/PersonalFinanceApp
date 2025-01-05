@@ -254,28 +254,28 @@ namespace PersonalFinanceApp
 
                 // Create Chart Series
                 IncomeExpensesChart.Series = new SeriesCollection
-                {
-                    new LineSeries
-                    {
-                        Title = "Income",
-                        Values = incomeValues,
-                        StrokeThickness = 2,
-                        Fill = System.Windows.Media.Brushes.Transparent,
-                        PointGeometry = DefaultGeometries.Circle,
-                        PointGeometrySize = 5,
-                        Stroke = System.Windows.Media.Brushes.LightGreen
-                    },
-                    new LineSeries
-                    {
-                        Title = "Expenses",
-                        Values = expenseValues,
-                        StrokeThickness = 2,
-                        Fill = System.Windows.Media.Brushes.Transparent,
-                        PointGeometry = DefaultGeometries.Circle,
-                        PointGeometrySize = 5,
-                        Stroke = System.Windows.Media.Brushes.Red
-                    }
-                };
+        {
+            new LineSeries
+            {
+                Title = "Income",
+                Values = incomeValues,
+                StrokeThickness = 2,
+                Fill = System.Windows.Media.Brushes.Transparent,
+                PointGeometry = DefaultGeometries.Circle,
+                PointGeometrySize = 5,
+                Stroke = System.Windows.Media.Brushes.LightGreen
+            },
+            new LineSeries
+            {
+                Title = "Expenses",
+                Values = expenseValues,
+                StrokeThickness = 2,
+                Fill = System.Windows.Media.Brushes.Transparent,
+                PointGeometry = DefaultGeometries.Circle,
+                PointGeometrySize = 5,
+                Stroke = System.Windows.Media.Brushes.Red
+            }
+        };
 
                 // Configure X-Axis as Date
                 IncomeExpensesChart.AxisX.Clear();
@@ -286,20 +286,22 @@ namespace PersonalFinanceApp
                     Separator = new LiveCharts.Wpf.Separator { Step = 1 }
                 });
 
-                // Configure Y-Axis
+                // Configure Y-Axis with MinValue set to 0
                 IncomeExpensesChart.AxisY.Clear();
                 IncomeExpensesChart.AxisY.Add(new Axis
                 {
                     Title = "Amount ($)",
-                    LabelFormatter = value => $"${value:N2}"
+                    LabelFormatter = value => $"${value:N2}",
+                    MinValue = 0 // Ensure Y-axis starts at 0
                 });
             }
             catch (Exception ex)
             {
-                MainWindow.Instance.ShowNotification($"Error loading chart data: {ex.Message}", NotificationType.Error);
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine($"Error in LoadIncomeExpensesChart: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while loading the income vs expenses chart.", NotificationType.Error);
             }
         }
+
 
 
         public class Transaction
