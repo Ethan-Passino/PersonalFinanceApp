@@ -160,6 +160,58 @@
                     </Border>
                 </StackPanel>
 
+                <!-- Monthly Averages -->
+                <StackPanel Margin="10">
+                    <TextBlock Text="Monthly Averages" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                    <TextBlock Text="This graph shows the average income, expenses, and savings per month over the selected period."
+                       Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <Border Background="#333333" CornerRadius="5" Padding="10">
+                        <lvc:CartesianChart x:Name="MonthlyAveragesChart" Background="#333333" VerticalAlignment="Stretch" Margin="10,0,10,10" Height="300">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Title="Month" Foreground="White" />
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis Title="Average Amount ($)" Foreground="White" LabelFormatter="{Binding}" MinValue="0"/>
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                    </Border>
+                </StackPanel>
+
+                <!-- Expense Distribution Over Time -->
+                <StackPanel Margin="10">
+                    <TextBlock Text="Expense Distribution Over Time" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                    <TextBlock Text="This graph shows how expenses are distributed across categories over time."
+                       Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <Border Background="#333333" CornerRadius="5" Padding="10">
+                        <lvc:CartesianChart x:Name="ExpenseDistributionChart" Background="#333333" VerticalAlignment="Stretch" Margin="10,0,10,10" Height="300">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Title="Month" Foreground="White" />
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis Title="Amount ($)" Foreground="White" LabelFormatter="{Binding}" MinValue="0"/>
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                    </Border>
+                </StackPanel>
+
+                <!-- Expense Heatmap -->
+                <StackPanel Margin="10">
+                    <TextBlock Text="Expense Heatmap" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+                    <TextBlock Text="This heatmap shows daily expenses over the selected period, with darker shades representing higher expenses."
+               Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <Border Background="#333333" CornerRadius="5" Padding="10">
+                        <lvc:CartesianChart x:Name="ExpenseHeatmap" Background="#333333" Height="300">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Title="Day of the Month" Foreground="White" />
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis Title="Month" Foreground="White" LabelsRotation="45" />
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                    </Border>
+                </StackPanel>
+
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

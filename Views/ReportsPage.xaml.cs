@@ -11,7 +11,7 @@ using Microsoft.Win32;
 using static PersonalFinanceApp.MainWindow;
 
 namespace PersonalFinanceApp
-{
+{ 
     public partial class ReportsPage : Page
     {
         private List<Transaction> Transactions;
@@ -142,6 +142,10 @@ namespace PersonalFinanceApp
 
                 UpdateIncomeExpensesChart(filteredTransactions, filteredPaystubs);
                 UpdateExpenseBreakdownChart(filteredTransactions);
+                UpdateMonthlyAveragesChart(filteredTransactions, filteredPaystubs);
+                UpdateExpenseDistributionChart(filteredTransactions);
+                UpdateExpenseHeatmap(filteredTransactions);
+
             }
             catch (Exception ex)
             {
@@ -263,6 +267,176 @@ namespace PersonalFinanceApp
                 MainWindow.Instance.ShowNotification("An error occurred while updating the expense breakdown chart.", NotificationType.Error);
             }
         }
+
+        private void UpdateMonthlyAveragesChart(List<Transaction> transactions, List<Paystub> paystubs)
+        {
+            var monthlyIncome = paystubs
+                .GroupBy(p => new { p.Date.Year, p.Date.Month })
+                .Select(g => new { Month = $"{g.Key.Year}-{g.Key.Month:00}", AverageIncome = g.Average(p => double.Parse(p.Income)) })
+                .ToList();
+
+            var monthlyExpenses = transactions
+                .GroupBy(t => new { t.Date.Year, t.Date.Month })
+                .Select(g => new { Month = $"{g.Key.Year}-{g.Key.Month:00}", AverageExpense = g.Average(t => double.Parse(t.Amount)) })
+                .ToList();
+
+            var allMonths = monthlyIncome.Select(mi => mi.Month).Union(monthlyExpenses.Select(me => me.Month)).Distinct().OrderBy(m => m).ToList();
+
+            var incomeValues = new ChartValues<double>();
+            var expenseValues = new ChartValues<double>();
+
+            foreach (var month in allMonths)
+            {
+                incomeValues.Add(monthlyIncome.FirstOrDefault(mi => mi.Month == month)?.AverageIncome ?? 0);
+                expenseValues.Add(monthlyExpenses.FirstOrDefault(me => me.Month == month)?.AverageExpense ?? 0);
+            }
+
+            MonthlyAveragesChart.Series = new SeriesCollection
+    {
+        new ColumnSeries
+        {
+            Title = "Income",
+            Values = incomeValues,
+            Fill = System.Windows.Media.Brushes.LightGreen
+        },
+        new ColumnSeries
+        {
+            Title = "Expenses",
+            Values = expenseValues,
+            Fill = System.Windows.Media.Brushes.Red
+        }
+    };
+
+            MonthlyAveragesChart.AxisX[0].Labels = allMonths;
+        }
+
+        private void UpdateExpenseDistributionChart(List<Transaction> transactions)
+        {
+            var categoryMonthlyTotals = transactions
+                .GroupBy(t => new { t.Date.Year, t.Date.Month, t.Category })
+                .Select(g => new
+                {
+                    Month = $"{g.Key.Year}-{g.Key.Month:00}",
+                    Category = g.Key.Category,
+                    Total = g.Sum(t => double.TryParse(t.Amount, out var amount) ? amount : 0)
+                })
+                .GroupBy(g => g.Month)
+                .ToDictionary(g => g.Key, g => g.ToDictionary(c => c.Category, c => c.Total));
+
+            var allMonths = categoryMonthlyTotals.Keys.OrderBy(m => m).ToList();
+            var categories = categoryMonthlyTotals.Values.SelectMany(dict => dict.Keys).Distinct().ToList();
+
+            var seriesCollection = new SeriesCollection();
+            foreach (var category in categories)
+            {
+                var values = new ChartValues<double>();
+                foreach (var month in allMonths)
+                {
+                    values.Add(categoryMonthlyTotals.ContainsKey(month) && categoryMonthlyTotals[month].ContainsKey(category)
+                        ? categoryMonthlyTotals[month][category]
+                        : 0);
+                }
+
+                seriesCollection.Add(new StackedColumnSeries
+                {
+                    Title = category,
+                    Values = values
+                });
+            }
+
+            ExpenseDistributionChart.Series = seriesCollection;
+
+            ExpenseDistributionChart.AxisX.Clear();
+            ExpenseDistributionChart.AxisX.Add(new Axis
+            {
+                Title = "Month",
+                Labels = allMonths
+            });
+
+            ExpenseDistributionChart.AxisY.Clear();
+            ExpenseDistributionChart.AxisY.Add(new Axis
+            {
+                Title = "Amount ($)",
+                LabelFormatter = value => $"${value:N2}"
+            });
+        }
+
+        private void UpdateExpenseHeatmap(List<Transaction> transactions)
+        {
+            try
+            {
+                // Group transactions by month and day
+                var groupedData = transactions
+                    .GroupBy(t =>
+                    {
+                        var date = (t.Date); // Parse Date
+                        return new { Month = date.Month, Day = date.Day };
+                    })
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Sum(t =>
+                        {
+                            // Parse Amount and handle invalid values
+                            if (double.TryParse(t.Amount, out double amount))
+                                return amount;
+                            return 0; // Default to 0 if parsing fails
+                        })
+                    );
+
+                // Define rows and columns for the heatmap
+                var months = groupedData.Keys.Select(k => k.Month).Distinct().OrderBy(m => m).ToList();
+                var days = Enumerable.Range(1, 31).ToList();
+
+                // Initialize heatmap data
+                var heatmapSeries = new LiveCharts.SeriesCollection();
+
+                foreach (var month in months)
+                {
+                    var values = new ChartValues<double>();
+                    foreach (var day in days)
+                    {
+                        // Add expense data or 0 if no data for the day
+                        var key = new { Month = month, Day = day };
+                        values.Add(groupedData.ContainsKey(key) ? groupedData[key] : 0);
+                    }
+
+                    heatmapSeries.Add(new ColumnSeries
+                    {
+                        Title = new DateTime(2025, month, 1).ToString("MMM"),
+                        Values = values,
+                        StrokeThickness = 0, // No border for cells
+                        Fill = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(50, 50, 168)) // Base color
+                    });
+                }
+
+                // Set the series and configure the axes
+                ExpenseHeatmap.Series = heatmapSeries;
+
+                // X-axis: Days of the month
+                ExpenseHeatmap.AxisX.Clear();
+                ExpenseHeatmap.AxisX.Add(new Axis
+                {
+                    Labels = days.Select(d => d.ToString()).ToList(),
+                    Separator = new LiveCharts.Wpf.Separator { Step = 1 }
+                });
+
+                // Y-axis: Months
+                ExpenseHeatmap.AxisY.Clear();
+                ExpenseHeatmap.AxisY.Add(new Axis
+                {
+                    Labels = months.Select(m => new DateTime(2025, m, 1).ToString("MMM")).ToList()
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateExpenseHeatmap: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while updating the expense heatmap.", NotificationType.Error);
+            }
+        }
+
+
+
+
 
 
         private void OnDownloadCsv(object sender, RoutedEventArgs e)
