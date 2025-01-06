@@ -59,15 +59,19 @@ namespace PersonalFinanceApp
             Error,
             Success,
             Info,
-            Warning
+            Warning,
+            Critical,
+            Debug
         }
 
         public void ShowNotification(string message, NotificationType type)
-        {            // Create a new NotificationControl
+        {
+            // Create a new NotificationControl
             var notification = new NotificationControl
             {
                 Message = message
             };
+
             // Set the background color based on the type
             SolidColorBrush backgroundColor;
             switch (type)
@@ -82,7 +86,13 @@ namespace PersonalFinanceApp
                     backgroundColor = new SolidColorBrush(Color.FromRgb(50, 92, 168)); // Dark Blue
                     break;
                 case NotificationType.Warning:
-                    backgroundColor = new SolidColorBrush(Color.FromRgb(255, 255, 0)); // Yellow
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(204, 153, 0)); // Dark Yellow
+                    break;
+                case NotificationType.Critical:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(139, 0, 0)); // Dark Crimson
+                    break;
+                case NotificationType.Debug:
+                    backgroundColor = new SolidColorBrush(Color.FromRgb(72, 61, 139)); // Dark Purple/Blue
                     break;
                 default:
                     backgroundColor = new SolidColorBrush(Color.FromRgb(50, 50, 50)); // Default Dark Grey
@@ -102,6 +112,8 @@ namespace PersonalFinanceApp
             };
             timer.Start();
         }
+
+
 
     }
 }
