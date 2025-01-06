@@ -23,6 +23,7 @@ namespace PersonalFinanceApp
             }
             catch (Exception ex)
             {
+                MainWindow.Instance.ShowNotification("DATABASE FAILED TO OPEN", MainWindow.NotificationType.Critical);
                 Console.WriteLine($"Error opening database connection: {ex.Message}");
                 throw;
             }

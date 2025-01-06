@@ -60,8 +60,7 @@ namespace PersonalFinanceApp
             Success,
             Info,
             Warning,
-            Critical,
-            Debug
+            Critical
         }
 
         public void ShowNotification(string message, NotificationType type)
@@ -90,9 +89,6 @@ namespace PersonalFinanceApp
                     break;
                 case NotificationType.Critical:
                     backgroundColor = new SolidColorBrush(Color.FromRgb(139, 0, 0)); // Dark Crimson
-                    break;
-                case NotificationType.Debug:
-                    backgroundColor = new SolidColorBrush(Color.FromRgb(72, 61, 139)); // Dark Purple/Blue
                     break;
                 default:
                     backgroundColor = new SolidColorBrush(Color.FromRgb(50, 50, 50)); // Default Dark Grey

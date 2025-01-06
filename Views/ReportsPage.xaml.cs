@@ -44,6 +44,11 @@ namespace PersonalFinanceApp
 
                 // Update reports with the selected range
                 UpdateReports();
+
+                if(Paystubs.Count == 0 && Transactions.Count == 0)
+                {
+                    MainWindow.Instance.ShowNotification("There is no data to process.", NotificationType.Warning);
+                }
             }
             catch (Exception ex)
             {
@@ -250,12 +255,6 @@ namespace PersonalFinanceApp
                         Values = new ChartValues<double> { category.Total },
                         DataLabels = true // Enable labels to show values on the chart
                     });
-                }
-
-                // Show "No data available" message if no categories are available
-                if (!categoryTotals.Any())
-                {
-                    MainWindow.Instance.ShowNotification("No expense data available for the selected date range.", NotificationType.Warning);
                 }
             }
             catch (Exception ex)
