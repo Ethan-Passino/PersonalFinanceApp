@@ -129,9 +129,16 @@ namespace PersonalFinanceApp
                     Employer TEXT,
                     Description TEXT
                 );";
+            string createBudgetsTable = @"
+                CREATE TABLE IF NOT EXISTS Budgets (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Category TEXT,
+                    Amount REAL NOT NULL DEFAULT 0
+                  );";
 
             ExecuteNonQuery(createTransactionsTable);
             ExecuteNonQuery(createPaystubsTable);
+            ExecuteNonQuery(createBudgetsTable);
 
             Console.WriteLine("Database initialized successfully.");
         }

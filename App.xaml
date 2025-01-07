@@ -35,6 +35,17 @@
             </Style.Triggers>
         </Style>
 
+        <x:Array x:Key="PredefinedCategories" Type="{x:Type sys:String}" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <sys:String>Rent</sys:String>
+            <sys:String>Gas</sys:String>
+            <sys:String>Food</sys:String>
+            <sys:String>Entertainment</sys:String>
+            <sys:String>Savings</sys:String>
+            <sys:String>Monthly</sys:String>
+            <sys:String>Maintenance</sys:String>
+            <sys:String>Other</sys:String>
+        </x:Array>
+
     </Application.Resources>
 
 </Application>

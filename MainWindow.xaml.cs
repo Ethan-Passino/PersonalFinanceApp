@@ -109,7 +109,9 @@ namespace PersonalFinanceApp
             timer.Start();
         }
 
-
-
+        private void NavigateToBudgets(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new Views.BudgetsPage());
+        }
     }
 }
