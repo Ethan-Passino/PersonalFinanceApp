@@ -53,6 +53,8 @@ namespace PersonalFinanceApp.Views
                         Amount = Convert.ToDouble(row["Amount"])
                     });
                 }
+
+                UpdateBudgetPieChart(); // Update chart after loading budgets
             }
             catch (Exception ex)
             {
@@ -141,6 +143,7 @@ namespace PersonalFinanceApp.Views
 
                     // Update the budget in the database
                     UpdateBudgetInDatabase(editedBudget);
+                    UpdateBudgetPieChart(); // Update chart after editing a budget
                     UpdateTotalBudget();
                 }
             }
@@ -187,6 +190,8 @@ namespace PersonalFinanceApp.Views
 
                 AddBudgetToDatabase(newBudget);
                 Budgets.Add(newBudget);
+
+                UpdateBudgetPieChart(); // Update chart after adding a budget
                 UpdateTotalBudget();
 
                 MainWindow.Instance.ShowNotification("Budget added successfully!", NotificationType.Success);
@@ -258,6 +263,7 @@ namespace PersonalFinanceApp.Views
 
                 DatabaseHelper.ExecuteNonQuery(query, parameters);
                 Budgets.Remove(budget);
+                UpdateBudgetPieChart(); // Update chart after deleting a budget
                 UpdateTotalBudget();
 
                 MainWindow.Instance.ShowNotification("Budget deleted successfully!", NotificationType.Success);
@@ -304,6 +310,47 @@ namespace PersonalFinanceApp.Views
                 }
             }
         }
+
+        private void UpdateBudgetPieChart()
+        {
+            try
+            {
+                // Clear previous data
+                BudgetPieChart.Series.Clear();
+
+                // Check if there is data
+                if (Budgets == null || !Budgets.Any())
+                {
+                    BudgetPieChart.Visibility = Visibility.Collapsed;
+                    BudgetPieChartNoDataMessage.Visibility = Visibility.Visible;
+                    return;
+                }
+
+                BudgetPieChart.Visibility = Visibility.Visible;
+                BudgetPieChartNoDataMessage.Visibility = Visibility.Collapsed;
+
+                // Create the pie chart series
+                var seriesCollection = new LiveCharts.SeriesCollection();
+                foreach (var budget in Budgets)
+                {
+                    seriesCollection.Add(new LiveCharts.Wpf.PieSeries
+                    {
+                        Title = budget.Category,
+                        Values = new LiveCharts.ChartValues<double> { budget.Amount },
+                        DataLabels = true, // Show labels on the pie chart
+                        LabelPoint = chartPoint => $"${chartPoint.Y:0.00}"
+                    });
+                }
+
+                BudgetPieChart.Series = seriesCollection;
+            }
+            catch (Exception ex)
+            {
+                MainWindow.Instance.ShowNotification($"Error updating budget pie chart: {ex.Message}", NotificationType.Error);
+                Console.WriteLine($"Error in UpdateBudgetPieChart: {ex}");
+            }
+        }
+
 
         public class Budget
         {

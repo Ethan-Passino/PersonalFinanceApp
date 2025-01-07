@@ -9,6 +9,7 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using Microsoft.Win32;
 using static PersonalFinanceApp.MainWindow;
+using static PersonalFinanceApp.Views.BudgetsPage;
 
 namespace PersonalFinanceApp
 { 
@@ -16,6 +17,7 @@ namespace PersonalFinanceApp
     {
         private List<Transaction> Transactions;
         private List<Paystub> Paystubs;
+        private List<Budget> Budgets;
 
         public ReportsPage()
         {
@@ -29,26 +31,20 @@ namespace PersonalFinanceApp
             {
                 Transactions = LoadTransactions();
                 Paystubs = LoadPaystubs();
+                Budgets = LoadBudgets(); // Load budgets here
 
-                // If dates are not already set, default to the past month
+                // Default date range
                 if (ReportsPageState.StartDate == null || ReportsPageState.EndDate == null)
                 {
                     var today = DateTime.Today;
                     ReportsPageState.EndDate = today;
-                    ReportsPageState.StartDate = today.AddMonths(-1); // Start date is one month earlier
+                    ReportsPageState.StartDate = today.AddMonths(-1);
                 }
 
-                // Set the date pickers to the stored dates
                 StartDatePicker.SelectedDate = ReportsPageState.StartDate;
                 EndDatePicker.SelectedDate = ReportsPageState.EndDate;
 
-                // Update reports with the selected range
                 UpdateReports();
-
-                if(Paystubs.Count == 0 && Transactions.Count == 0)
-                {
-                    MainWindow.Instance.ShowNotification("There is no data to process.", NotificationType.Warning);
-                }
             }
             catch (Exception ex)
             {
@@ -56,6 +52,28 @@ namespace PersonalFinanceApp
                 Console.WriteLine(ex.Message);
             }
         }
+
+        private List<Budget> LoadBudgets()
+        {
+            try
+            {
+                var query = "SELECT Id, Category, Amount FROM Budgets";
+                var budgetsTable = DatabaseHelper.ExecuteQuery(query);
+
+                return budgetsTable.AsEnumerable().Select(row => new Budget
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Category = row["Category"].ToString(),
+                    Amount = Convert.ToDouble(row["Amount"])
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading budgets: {ex.Message}");
+                throw;
+            }
+        }
+
 
 
 
@@ -145,7 +163,7 @@ namespace PersonalFinanceApp
                 UpdateMonthlyAveragesChart(filteredTransactions, filteredPaystubs);
                 UpdateExpenseDistributionChart(filteredTransactions);
                 UpdateExpenseHeatmap(filteredTransactions);
-
+                UpdateBudgetVsActualChart();
             }
             catch (Exception ex)
             {
@@ -153,6 +171,7 @@ namespace PersonalFinanceApp
                 Console.WriteLine($"Error in UpdateReports: {ex.Message}");
             }
         }
+
 
         private void OnDateChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -502,6 +521,106 @@ namespace PersonalFinanceApp
 
             return string.Join(Environment.NewLine, csv);
         }
+
+        private void UpdateBudgetVsActualChart()
+        {
+            try
+            {
+                // Define the date range for the current month
+                var now = DateTime.Now;
+                var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+
+                // Filter transactions for the current month
+                var actualSpending = Transactions
+                    .Where(t => t.Date >= firstDayOfMonth && t.Date <= lastDayOfMonth && !string.IsNullOrWhiteSpace(t.Category))
+                    .GroupBy(t => t.Category)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Sum(t => double.TryParse(t.Amount, out var amount) ? amount : 0)
+                    );
+
+                // Prepare budgets as a dictionary for quick lookup
+                var budgetData = Budgets
+                    .Where(b => !string.IsNullOrWhiteSpace(b.Category))
+                    .ToDictionary(b => b.Category, b => b.Amount);
+
+                // Merge all categories (from budgets and transactions) and calculate totals
+                var allCategories = budgetData.Keys.Union(actualSpending.Keys).Distinct().ToList();
+
+                double totalBudget = 0;
+                double totalActual = 0;
+
+                var budgetValues = new ChartValues<double>();
+                var actualValues = new ChartValues<double>();
+                var categoryLabels = new List<string>();
+
+                foreach (var category in allCategories)
+                {
+                    var budgetAmount = budgetData.ContainsKey(category) ? budgetData[category] : 0;
+                    var actualAmount = actualSpending.ContainsKey(category) ? actualSpending[category] : 0;
+
+                    budgetValues.Add(budgetAmount);
+                    actualValues.Add(actualAmount);
+
+                    totalBudget += budgetAmount;
+                    totalActual += actualAmount;
+
+                    categoryLabels.Add(category); // Add category to the labels
+                }
+
+                // Add total bars
+                budgetValues.Add(totalBudget);
+                actualValues.Add(totalActual);
+                categoryLabels.Add("Total");
+
+                // Configure the chart
+                BudgetVsActualChart.Series = new SeriesCollection
+        {
+            new ColumnSeries
+            {
+                Title = "Budget",
+                Values = budgetValues,
+                Fill = System.Windows.Media.Brushes.LightGreen
+            },
+            new ColumnSeries
+            {
+                Title = "Actual",
+                Values = actualValues,
+                Fill = System.Windows.Media.Brushes.Red
+            }
+        };
+
+                // Update X-Axis labels
+                BudgetVsActualChart.AxisX.Clear();
+                BudgetVsActualChart.AxisX.Add(new Axis
+                {
+                    Title = "Categories",
+                    Labels = categoryLabels,
+                    Separator = new LiveCharts.Wpf.Separator { Step = 1 }
+                });
+
+                // Update Y-Axis labels
+                BudgetVsActualChart.AxisY.Clear();
+                BudgetVsActualChart.AxisY.Add(new Axis
+                {
+                    Title = "Amount ($)",
+                    LabelFormatter = value => $"${value:N2}",
+                    MinValue = 0 // Ensure the axis starts at 0
+                });
+
+                // Display the chart
+                BudgetVsActualChart.Visibility = Visibility.Visible;
+                BudgetVsActualNoDataMessage.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating Budget vs Actual chart: {ex.Message}");
+                MainWindow.Instance.ShowNotification("An error occurred while updating the Budget vs Actual chart.", NotificationType.Error);
+            }
+        }
+
+
 
     }
 
