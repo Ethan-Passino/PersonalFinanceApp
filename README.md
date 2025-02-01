@@ -2,6 +2,11 @@
 
 ### A sleek and intuitive WPF-based personal finance application for tracking income, expenses, and more! Built with SQLite for data storage, this app makes it easy to stay on top of your financial goals.  
 
+# Dev Note
+
+Currently taking a bit of a break updating this while working on NodeChat. Don't worry, I'll come back as I use this application everyday and would like to make some changes!
+
+
 ---
 
 ## 📖 Features
