@@ -5,7 +5,9 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.ComponentModel;
 using static PersonalFinanceApp.MainWindow;
+using System.Windows.Data;
 
 namespace PersonalFinanceApp
 {
@@ -13,6 +15,10 @@ namespace PersonalFinanceApp
     {
         public ObservableCollection<Transaction> Transactions { get; set; }
         public ObservableCollection<Paystub> Paystubs { get; set; }
+
+        public ICollectionView TransactionsView { get; set; }
+        public ICollectionView PaystubsView { get; set; }
+
         
         private bool isEditingTransaction = false;
         private bool isEditingPaystub = false;
@@ -29,22 +35,21 @@ namespace PersonalFinanceApp
             Paystubs = new ObservableCollection<Paystub>();
             DataContext = this;
             LoadDataFromDatabase();
-
-            TransactionsGrid.ItemsSource = Transactions;
-            PaystubsGrid.ItemsSource = Paystubs;
         }
 
         private void LoadDataFromDatabase()
         {
             try
             {
+                Transactions.Clear();
+                Paystubs.Clear();
+
                 // Load Transactions
                 string transactionQuery = "SELECT Id, Amount, Category, Date, Description FROM Transactions;";
                 var transactionsTable = DatabaseHelper.ExecuteQuery(transactionQuery);
 
                 foreach (DataRow row in transactionsTable.Rows)
                 {
-                    // Validate row data
                     if (!IsRowValid(row, new[] { "Amount", "Category", "Date", "Description" }))
                         continue;
 
@@ -58,13 +63,12 @@ namespace PersonalFinanceApp
                     });
                 }
 
-                // Load PayStubs
+                // Load Paystubs
                 string payStubQuery = "SELECT Id, Income, Date, Employer, Description FROM PayStubs;";
                 var payStubsTable = DatabaseHelper.ExecuteQuery(payStubQuery);
 
                 foreach (DataRow row in payStubsTable.Rows)
                 {
-                    // Validate row data
                     if (!IsRowValid(row, new[] { "Income", "Date", "Employer", "Description" }))
                         continue;
 
@@ -77,6 +81,19 @@ namespace PersonalFinanceApp
                         Description = row["Description"].ToString()
                     });
                 }
+
+                // Apply Sorting to Transactions
+                TransactionsView = CollectionViewSource.GetDefaultView(Transactions);
+                TransactionsView.SortDescriptions.Clear();
+                TransactionsView.SortDescriptions.Add(new SortDescription("ParsedDate", ListSortDirection.Descending));
+
+                // Apply Sorting to Paystubs
+                PaystubsView = CollectionViewSource.GetDefaultView(Paystubs);
+                PaystubsView.SortDescriptions.Clear();
+                PaystubsView.SortDescriptions.Add(new SortDescription("ParsedDate", ListSortDirection.Descending));
+
+                TransactionsGrid.ItemsSource = TransactionsView;
+                PaystubsGrid.ItemsSource = PaystubsView;
             }
             catch (Exception ex)
             {
@@ -84,6 +101,7 @@ namespace PersonalFinanceApp
                 Console.WriteLine($"Error: {ex}");
             }
         }
+
 
         /// <summary>
         /// Checks if the specified DataRow has non-empty values for all specified columns.
@@ -396,19 +414,42 @@ namespace PersonalFinanceApp
         {
             public int Id { get; set; }
             public string Category { get; set; }
-            public string Amount { get; set; } // Changed to string
+            public string Amount { get; set; } // Stored as string
             public string Date { get; set; }
             public string Description { get; set; }
+
+            // Computed property for sorting
+            public DateTime ParsedDate
+            {
+                get
+                {
+                    if (DateTime.TryParse(Date, out DateTime parsedDate))
+                        return parsedDate;
+                    return DateTime.MinValue; // Fallback if parsing fails
+                }
+            }
         }
 
         public class Paystub
         {
             public int Id { get; set; }
             public string Date { get; set; }
-            public string Income { get; set; } // Changed to string
+            public string Income { get; set; } // Stored as string
             public string Employer { get; set; }
             public string Description { get; set; }
+
+            // Computed property for sorting
+            public DateTime ParsedDate
+            {
+                get
+                {
+                    if (DateTime.TryParse(Date, out DateTime parsedDate))
+                        return parsedDate;
+                    return DateTime.MinValue; // Fallback if parsing fails
+                }
+            }
         }
+
 
 
         public class RelayCommand<T> : ICommand
