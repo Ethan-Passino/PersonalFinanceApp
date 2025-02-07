@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using static PersonalFinanceApp.MainWindow;
 using System.Windows.Data;
+using System.Linq;
 
 namespace PersonalFinanceApp
 {
@@ -69,18 +70,21 @@ namespace PersonalFinanceApp
 
                 foreach (DataRow row in payStubsTable.Rows)
                 {
-                    if (!IsRowValid(row, new[] { "Income", "Date", "Employer", "Description" }))
+                    if (!IsRowValid(row, new[] { "Income", "Date", "Employer", "Description" }, new[] { "Description" }))
                         continue;
 
-                    Paystubs.Add(new Paystub
+                    var paystub = new Paystub
                     {
                         Id = Convert.ToInt32(row["Id"]),
                         Income = row["Income"].ToString(),
                         Date = row["Date"].ToString(),
                         Employer = row["Employer"].ToString(),
-                        Description = row["Description"].ToString()
-                    });
+                        Description = row["Description"] == DBNull.Value ? "" : row["Description"].ToString() // ✅ Handle NULL values properly
+                    };
+
+                    Paystubs.Add(paystub);
                 }
+
 
                 // Apply Sorting to Transactions
                 TransactionsView = CollectionViewSource.GetDefaultView(Transactions);
@@ -106,15 +110,24 @@ namespace PersonalFinanceApp
         /// <summary>
         /// Checks if the specified DataRow has non-empty values for all specified columns.
         /// </summary>
-        private bool IsRowValid(DataRow row, string[] columns)
+        private bool IsRowValid(DataRow row, string[] columns, string[] optionalColumns = null)
         {
+            optionalColumns ??= Array.Empty<string>(); // Ensure optionalColumns is not null
+
             foreach (var column in columns)
             {
+                if (optionalColumns.Contains(column)) // Skip validation for optional columns
+                    continue;
+
                 if (row.IsNull(column) || string.IsNullOrWhiteSpace(row[column]?.ToString()))
+                {
+                    Console.WriteLine($"Skipping row due to missing or empty '{column}': {string.Join(", ", columns.Select(c => row[c]?.ToString() ?? "NULL"))}");
                     return false;
+                }
             }
             return true;
         }
+
 
 
         // Sends a confirmation message
@@ -396,18 +409,17 @@ namespace PersonalFinanceApp
 
         private void PaystubsGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
-            // Validate the row data
             if (e.Row.Item is Paystub paystub)
             {
                 if (string.IsNullOrWhiteSpace(paystub.Date) ||
-                    string.IsNullOrWhiteSpace(paystub.Employer) ||
-                    string.IsNullOrWhiteSpace(paystub.Description))
+                    string.IsNullOrWhiteSpace(paystub.Employer))
                 {
-                    // Remove invalid rows from the source
                     Paystubs.Remove(paystub);
+                    Console.WriteLine($"Removed paystub due to missing required fields: ID={paystub.Id}, Date={paystub.Date}, Employer={paystub.Employer}, Income={paystub.Income}");
                 }
             }
         }
+
 
 
         public class Transaction
