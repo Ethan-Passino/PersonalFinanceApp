@@ -6,7 +6,7 @@
 
 ~~Currently taking a bit of a break updating this while working on NodeChat. Don't worry, I'll come back as I use this application everyday and would like to make some changes!~~
 Back to working on this project have a few things I want to fix at the very least:
-- Change records page to order the transactions and paystubs by the date you put in their specific fields rather than creation date.
+- ~~Change records page to order the transactions and paystubs by the date you put in their specific fields rather than creation date.~~
 - Fix records page to properly display all paystubs.
 
 
