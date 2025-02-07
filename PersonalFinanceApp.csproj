@@ -1,32 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<!-- Removed single-file and self-contained settings for default behavior -->
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Fody" Version="6.6.0" PrivateAssets="All" />
-    <PackageReference Include="Costura.Fody" Version="5.1.0" PrivateAssets="All" />
-    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Fody" Version="6.6.0" PrivateAssets="All" />
+		<PackageReference Include="Costura.Fody" Version="5.1.0" PrivateAssets="All" />
+		<PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+	</ItemGroup>
 
-  <!-- Ensure native SQLite DLLs are copied -->
-  <ItemGroup>
-    <None Include="bin\Debug\net6.0-windows\runtimes\win-x64\native\SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <!-- Fody configuration -->
-  <ItemGroup>
-    <None Update="FodyWeavers.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<!-- Optional Fody configuration -->
+	<ItemGroup>
+		<None Update="FodyWeavers.xml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>
