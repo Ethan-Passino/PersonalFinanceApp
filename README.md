@@ -30,7 +30,7 @@
 - Add the ability to create and delete categories for spending.
 - Update all of the graphs to let you know when there is no data instead of displaying an empty graph
 - Graphs should look better no matter what the data looks like
-- Settings page for changing simple settings in the app
+- Settings page for changing simple settings in the app such as themes.
 - Ability to backup all of your data in the application.
 
 ---
