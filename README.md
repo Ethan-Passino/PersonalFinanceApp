@@ -58,19 +58,6 @@
 
 ---
 
-## 🌟 Upcoming Features
-
-- **📽️ Demo GIF**  
-  *A short demo GIF showcasing the app in action will be added soon!*  
-
-- **📅 Advanced Filters**  
-  Filter records by custom date ranges and categories.  
-
-- **📂 Import/Export**  
-  Export your data to CSV and import data directly into the app.  
-
----
-
 ## 📸 Demo  
 
 **Coming Soon! Stay Tuned!**
