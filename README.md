@@ -1,6 +1,6 @@
 # 💰 Personal Finance App
 
-### A sleek and intuitive WPF-based personal finance application for tracking income, expenses, and more! Built with SQLite for data storage, this app makes it easy to stay on top of your financial goals.  
+### A sleek and intuitive WPF-based personal finance application for tracking income, expenses, budgeting and more! Built with SQLite for data storage, this app makes it easy to stay on top of your financial goals.  
 ---
 
 ## 📖 Features
