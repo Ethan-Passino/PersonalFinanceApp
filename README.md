@@ -60,7 +60,7 @@
 
 ## 📸 Demo  
 
-**Coming Soon! Stay Tuned!**
+Check my website for the demo! [Ethan Passino Projects](https://ethanpassino.com/#projects)
 
 ---
 
