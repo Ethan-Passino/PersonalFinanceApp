@@ -12,7 +12,7 @@
   Log your expenses with categories, descriptions, and amounts.  
 
 - **📊 Visual Reports**  
-  View pie charts and bar graphs of income vs expenses, and analyze spending breakdowns.  
+  View pie charts and bar graphs of income vs expenses, and analyze spending breakdowns. It also shows budgets vs actuals. 
 
 - **🖥️ Dashboard Overview**  
   High-level summary of your finances and recent activity at a glance.  
