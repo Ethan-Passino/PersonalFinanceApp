@@ -1,6 +1,6 @@
 # 💰 Personal Finance App
 
-### A sleek and intuitive WPF-based personal finance application for tracking income, expenses, and more! Built with SQLite for data storage, this app makes it easy to stay on top of your financial goals.  
+### A sleek and intuitive WPF-based personal finance application for tracking income, expenses, budgeting and more! This app makes it easy to stay on top of your financial goals.  
 ---
 
 ## 📖 Features
@@ -12,7 +12,7 @@
   Log your expenses with categories, descriptions, and amounts.  
 
 - **📊 Visual Reports**  
-  View pie charts and bar graphs of income vs expenses, and analyze spending breakdowns.  
+  View pie charts and bar graphs of income vs expenses, and analyze spending breakdowns. It also shows budgets vs actuals. 
 
 - **🖥️ Dashboard Overview**  
   High-level summary of your finances and recent activity at a glance.  
@@ -30,7 +30,7 @@
 - Add the ability to create and delete categories for spending.
 - Update all of the graphs to let you know when there is no data instead of displaying an empty graph
 - Graphs should look better no matter what the data looks like
-- Settings page for changing simple settings in the app
+- Settings page for changing simple settings in the app such as themes.
 - Ability to backup all of your data in the application.
 
 ---
@@ -58,22 +58,9 @@
 
 ---
 
-## 🌟 Upcoming Features
-
-- **📽️ Demo GIF**  
-  *A short demo GIF showcasing the app in action will be added soon!*  
-
-- **📅 Advanced Filters**  
-  Filter records by custom date ranges and categories.  
-
-- **📂 Import/Export**  
-  Export your data to CSV and import data directly into the app.  
-
----
-
 ## 📸 Demo  
 
-**Coming Soon! Stay Tuned!**
+Check my website for the demo! [Ethan Passino Projects](https://ethanpassino.com/#projects)
 
 ---
 
