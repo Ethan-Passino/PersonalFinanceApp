@@ -197,6 +197,17 @@ namespace PersonalFinanceApp
                     .GroupBy(t => t.Date.Date)
                     .ToDictionary(g => g.Key, g => g.Sum(t => double.Parse(t.Amount)));
 
+                if(!incomeData.Any() && !expenseData.Any())
+                {
+                    IncomeExpensesChart.Visibility = Visibility.Collapsed;
+                    IncomeExpensesNoDataMessage.Visibility = Visibility.Visible;
+                    return;
+                } else
+                {
+                    IncomeExpensesChart.Visibility = Visibility.Visible;
+                    IncomeExpensesNoDataMessage.Visibility = Visibility.Collapsed;
+                }
+
                 var allDates = incomeData.Keys.Union(expenseData.Keys).OrderBy(date => date).ToList();
 
                 var incomeValues = new ChartValues<double>();
@@ -266,6 +277,19 @@ namespace PersonalFinanceApp
                     .Where(g => g.Total > 0) // Only include categories with non-zero totals
                     .OrderByDescending(g => g.Total);
 
+                // Checking if there is data if there isn't we show a message
+                if(!categoryTotals.Any())
+                {
+                    ExpenseBreakdownChart.Visibility = Visibility.Collapsed;
+                    ExpenseBreakdownNoDataMessage.Visibility = Visibility.Visible;
+                    return;
+                }
+                else
+                {
+                    ExpenseBreakdownChart.Visibility = Visibility.Visible;
+                    ExpenseBreakdownNoDataMessage.Visibility = Visibility.Collapsed;
+                }
+
                 // Clear previous chart data
                 ExpenseBreakdownChart.Series = new SeriesCollection();
 
@@ -298,6 +322,20 @@ namespace PersonalFinanceApp
                 .GroupBy(t => new { t.Date.Year, t.Date.Month })
                 .Select(g => new { Month = $"{g.Key.Year}-{g.Key.Month:00}", AverageExpense = g.Average(t => double.Parse(t.Amount)) })
                 .ToList();
+
+            // Check if there is data. If there isn't, display a message
+            if(!monthlyIncome.Any() && !monthlyExpenses.Any())
+            {
+                MonthlyAveragesChart.Visibility = Visibility.Collapsed;
+                MonthlyAveragesNoDataMessage.Visibility = Visibility.Visible;
+                return;
+            }
+            else
+            {
+                MonthlyAveragesChart.Visibility = Visibility.Visible;
+                MonthlyAveragesNoDataMessage.Visibility = Visibility.Collapsed;
+            }
+
 
             var allMonths = monthlyIncome.Select(mi => mi.Month).Union(monthlyExpenses.Select(me => me.Month)).Distinct().OrderBy(m => m).ToList();
 
@@ -341,6 +379,19 @@ namespace PersonalFinanceApp
                 })
                 .GroupBy(g => g.Month)
                 .ToDictionary(g => g.Key, g => g.ToDictionary(c => c.Category, c => c.Total));
+
+            // Check if there is data, if there isn't any display a message
+            if (!categoryMonthlyTotals.Any())
+            {
+                ExpenseDistributionChart.Visibility = Visibility.Collapsed;
+                ExpenseDistributionNoDataMessage.Visibility = Visibility.Visible;
+                return;
+            }
+            else
+            {
+                ExpenseDistributionChart.Visibility = Visibility.Visible;
+                ExpenseDistributionNoDataMessage.Visibility = Visibility.Collapsed;
+            }
 
             var allMonths = categoryMonthlyTotals.Keys.OrderBy(m => m).ToList();
             var categories = categoryMonthlyTotals.Values.SelectMany(dict => dict.Keys).Distinct().ToList();
@@ -401,6 +452,19 @@ namespace PersonalFinanceApp
                             return 0; // Default to 0 if parsing fails
                         })
                     );
+
+                // Check if there is data. If there isn't any display a message
+                if (!groupedData.Any())
+                {
+                    ExpenseHeatmap.Visibility = Visibility.Collapsed;
+                    ExpenseHeatmapNoDataMessage.Visibility = Visibility.Visible;
+                    return;
+                }
+                else
+                {
+                    ExpenseHeatmap.Visibility = Visibility.Visible;
+                    ExpenseHeatmapNoDataMessage.Visibility = Visibility.Collapsed;
+                }
 
                 // Define rows and columns for the heatmap
                 var months = groupedData.Keys.Select(k => k.Month).Distinct().OrderBy(m => m).ToList();
@@ -544,6 +608,19 @@ namespace PersonalFinanceApp
                 var budgetData = Budgets
                     .Where(b => !string.IsNullOrWhiteSpace(b.Category))
                     .ToDictionary(b => b.Category, b => b.Amount);
+
+                // Check for data, if there isn't any dispaly a message
+                if (!actualSpending.Any() && !budgetData.Any())
+                {
+                    BudgetVsActualChart.Visibility = Visibility.Collapsed;
+                    BudgetVsActualNoDataMessage.Visibility = Visibility.Visible;
+                    return;
+                }
+                else
+                {
+                    BudgetVsActualChart.Visibility = Visibility.Visible;
+                    BudgetVsActualNoDataMessage.Visibility = Visibility.Collapsed;
+                }
 
                 // Merge all categories (from budgets and transactions) and calculate totals
                 var allCategories = budgetData.Keys.Union(actualSpending.Keys).Distinct().ToList();

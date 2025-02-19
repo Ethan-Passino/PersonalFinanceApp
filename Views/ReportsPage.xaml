@@ -137,6 +137,8 @@
                     <TextBlock Text="Income vs Expenses Over Time" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
                     <TextBlock Text="This graph compares income and expenses trends over the selected period."
                                Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <TextBlock x:Name="IncomeExpensesNoDataMessage" Text="No data available for Income vs Expenses." 
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
                     <Border Background="#333333" CornerRadius="5" Padding="10">
                         <lvc:CartesianChart x:Name="IncomeExpensesChart" Background="#333333" VerticalAlignment="Stretch" Margin="10,0,10,10" Height="300">
                             <lvc:CartesianChart.AxisX>
@@ -146,6 +148,7 @@
                                 <lvc:Axis Title="Amount ($)" Foreground="White" LabelFormatter="{Binding}" MinValue="0"/>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
+                        
 
                     </Border>
                 </StackPanel>
@@ -155,6 +158,8 @@
                     <TextBlock Text="Expense Breakdown" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
                     <TextBlock Text="This pie chart shows the proportion of expenses by category."
                                Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <TextBlock x:Name="ExpenseBreakdownNoDataMessage" Text="No data available for Expense Breakdown." 
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
                     <Border Background="#333333" CornerRadius="5" Padding="10">
                         <lvc:PieChart x:Name="ExpenseBreakdownChart" Height="300" />
                     </Border>
@@ -165,6 +170,8 @@
                     <TextBlock Text="Monthly Averages" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
                     <TextBlock Text="This graph shows the average income, expenses, and savings per month over the selected period."
                        Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <TextBlock x:Name="MonthlyAveragesNoDataMessage" Text="No data available for Monthly Averages." 
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
                     <Border Background="#333333" CornerRadius="5" Padding="10">
                         <lvc:CartesianChart x:Name="MonthlyAveragesChart" Background="#333333" VerticalAlignment="Stretch" Margin="10,0,10,10" Height="300">
                             <lvc:CartesianChart.AxisX>
@@ -182,6 +189,8 @@
                     <TextBlock Text="Expense Distribution Over Time" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
                     <TextBlock Text="This graph shows how expenses are distributed across categories over time."
                        Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <TextBlock x:Name="ExpenseDistributionNoDataMessage" Text="No data available for Expense Distribution." 
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
                     <Border Background="#333333" CornerRadius="5" Padding="10">
                         <lvc:CartesianChart x:Name="ExpenseDistributionChart" Background="#333333" VerticalAlignment="Stretch" Margin="10,0,10,10" Height="300">
                             <lvc:CartesianChart.AxisX>
@@ -199,6 +208,8 @@
                     <TextBlock Text="Expense Heatmap" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
                     <TextBlock Text="This heatmap shows daily expenses over the selected period, with darker shades representing higher expenses."
                Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+                    <TextBlock x:Name="ExpenseHeatmapNoDataMessage" Text="No data available for Expense Heatmap." 
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
                     <Border Background="#333333" CornerRadius="5" Padding="10">
                         <lvc:CartesianChart x:Name="ExpenseHeatmap" Background="#333333" Height="300">
                             <lvc:CartesianChart.AxisX>
