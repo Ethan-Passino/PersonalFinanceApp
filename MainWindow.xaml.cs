@@ -54,6 +54,16 @@ namespace PersonalFinanceApp
             DynamicContentFrame.Navigate(new RecordsPage());
         }
 
+        private void NavigateToBudgets(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new Views.BudgetsPage());
+        }
+
+        private void NavigateToAdmin(object sender, RoutedEventArgs e)
+        {
+            DynamicContentFrame.Navigate(new Views.AdminPage());
+        }
+
         public enum NotificationType
         {
             Error,
@@ -109,9 +119,6 @@ namespace PersonalFinanceApp
             timer.Start();
         }
 
-        private void NavigateToBudgets(object sender, RoutedEventArgs e)
-        {
-            DynamicContentFrame.Navigate(new Views.BudgetsPage());
-        }
+
     }
 }

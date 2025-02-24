@@ -27,18 +27,20 @@
 
         <!-- Footer / Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
-            <Button Content="Dashboard" Width="150" Height="40" Margin="10"
+            <Button Content="Dashboard" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToDashboard" />
-            <Button Content="Add Transaction" Width="150" Height="40" Margin="10"
+            <Button Content="Add Transaction" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToTransactions" />
-            <Button Content="View Reports" Width="150" Height="40" Margin="10"
+            <Button Content="View Reports" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToReports" />
-            <Button Content="Add Pay Stub" Width="150" Height="40" Margin="10"
+            <Button Content="Add Pay Stub" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToPayStub" />
-            <Button Content="View Records" Width="150" Height="40" Margin="10"
+            <Button Content="View Records" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToRecords" />
-            <Button Content="Edit Budgets" Width="150" Height="40" Margin="10" 
+            <Button Content="Edit Budgets" Width="100" Height="40" Margin="10" 
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToBudgets" />
+            <Button Content="Admin Page" Width="100" Height="40" Margin="10"
+                    Style="{StaticResource DarkThemeButton}" Click="NavigateToAdmin" />
         </StackPanel>
 
     </Grid>
