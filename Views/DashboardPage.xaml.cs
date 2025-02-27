@@ -225,10 +225,14 @@ namespace PersonalFinanceApp
         {
             try
             {
-                // Query to get Income and Expenses grouped by Date
-                string incomeQuery = "SELECT Date, SUM(Income) as TotalIncome FROM Paystubs GROUP BY Date;";
-                string expenseQuery = "SELECT Date, SUM(Amount) as TotalExpense FROM Transactions GROUP BY Date;";
 
+                // Define a time range
+                DateTime startDate = DateTime.Now.AddMonths(-3);
+
+                // Query to get Income and Expenses grouped by Date
+                string incomeQuery = $"SELECT Date, SUM(Income) as TotalIncome FROM Paystubs WHERE Date >= '{startDate:yyyy-MM-dd}' GROUP BY Date;"; 
+                string expenseQuery = $"SELECT Date, SUM(Amount) as TotalExpense FROM Transactions WHERE Date >= '{startDate:yyyy-MM-dd}' GROUP BY Date;";
+                
                 var incomeTable = DatabaseHelper.ExecuteQuery(incomeQuery);
                 var expenseTable = DatabaseHelper.ExecuteQuery(expenseQuery);
 
@@ -240,7 +244,10 @@ namespace PersonalFinanceApp
                     .ToDictionary(row => DateTime.Parse(row["Date"].ToString()), row => Convert.ToDouble(row["TotalExpense"]));
 
                 // Merge Dates from both data sources
-                var allDates = incomeData.Keys.Union(expenseData.Keys).OrderBy(date => date).ToList();
+                var allDates = incomeData.Keys.Union(expenseData.Keys)
+                    .Where(date => date >= startDate) // Apply the filter
+                    .OrderBy(date => date)
+                    .ToList();
 
                 // Prepare Values for Chart
                 var incomeValues = new ChartValues<double>();
