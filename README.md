@@ -75,6 +75,11 @@ Want to help improve the app? Contributions are welcome!
 
 ---
 
+## Patches
+- Fixed the budgets page not always properly showing the categories table.
+- Fixed records page not showing all data if there was too much data.
+- Fixed records page not showing a record if it did not have a date set.
+
 ## 📝 License  
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).  
