@@ -80,6 +80,9 @@ Want to help improve the app? Contributions are welcome!
 - Fixed records page not showing all data if there was too much data.
 - Fixed records page not showing a record if it did not have a date set.
 
+# Known Bugs
+- Budgets vs Actual doesn't work properly and doesn't display the actual values.
+
 ## 📝 License  
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).  
