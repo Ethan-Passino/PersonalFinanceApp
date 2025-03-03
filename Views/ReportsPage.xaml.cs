@@ -590,26 +590,30 @@ namespace PersonalFinanceApp
         {
             try
             {
-                // Define the date range for the current month
-                var now = DateTime.Now;
-                var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+                // Get the selected end date (default to today if null)
+                var selectedEndDate = EndDatePicker.SelectedDate ?? DateTime.Now;
+
+                // Extract the first and last day of the selected month
+                var firstDayOfMonth = new DateTime(selectedEndDate.Year, selectedEndDate.Month, 1);
                 var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
-                // Filter transactions for the current month
+                Console.WriteLine($"Updating chart for: {firstDayOfMonth:MMMM yyyy}");
+
+                // Filter transactions for the selected month
                 var actualSpending = Transactions
                     .Where(t => t.Date >= firstDayOfMonth && t.Date <= lastDayOfMonth && !string.IsNullOrWhiteSpace(t.Category))
-                    .GroupBy(t => t.Category)
+                    .GroupBy(t => t.Category.Trim()) // Trim category names to avoid inconsistencies
                     .ToDictionary(
                         g => g.Key,
                         g => g.Sum(t => double.TryParse(t.Amount, out var amount) ? amount : 0)
                     );
 
-                // Prepare budgets as a dictionary for quick lookup
+                // Prepare budgets (no date filtering needed)
                 var budgetData = Budgets
                     .Where(b => !string.IsNullOrWhiteSpace(b.Category))
-                    .ToDictionary(b => b.Category, b => b.Amount);
+                    .ToDictionary(b => b.Category.Trim(), b => b.Amount);
 
-                // Check for data, if there isn't any dispaly a message
+                // If no data is available, hide the chart and show the message
                 if (!actualSpending.Any() && !budgetData.Any())
                 {
                     BudgetVsActualChart.Visibility = Visibility.Collapsed;
@@ -622,7 +626,7 @@ namespace PersonalFinanceApp
                     BudgetVsActualNoDataMessage.Visibility = Visibility.Collapsed;
                 }
 
-                // Merge all categories (from budgets and transactions) and calculate totals
+                // Merge all categories (from budgets and transactions)
                 var allCategories = budgetData.Keys.Union(actualSpending.Keys).Distinct().ToList();
 
                 double totalBudget = 0;
@@ -643,7 +647,7 @@ namespace PersonalFinanceApp
                     totalBudget += budgetAmount;
                     totalActual += actualAmount;
 
-                    categoryLabels.Add(category); // Add category to the labels
+                    categoryLabels.Add(category);
                 }
 
                 // Add total bars
@@ -651,7 +655,7 @@ namespace PersonalFinanceApp
                 actualValues.Add(totalActual);
                 categoryLabels.Add("Total");
 
-                // Configure the chart
+                // Update chart data
                 BudgetVsActualChart.Series = new SeriesCollection
         {
             new ColumnSeries
@@ -672,7 +676,7 @@ namespace PersonalFinanceApp
                 BudgetVsActualChart.AxisX.Clear();
                 BudgetVsActualChart.AxisX.Add(new Axis
                 {
-                    Title = "Categories",
+                    Title = $"Categories (Month: {firstDayOfMonth:MMMM yyyy})",
                     Labels = categoryLabels,
                     Separator = new LiveCharts.Wpf.Separator { Step = 1 }
                 });
@@ -683,12 +687,11 @@ namespace PersonalFinanceApp
                 {
                     Title = "Amount ($)",
                     LabelFormatter = value => $"${value:N2}",
-                    MinValue = 0 // Ensure the axis starts at 0
+                    MinValue = 0
                 });
 
-                // Display the chart
-                BudgetVsActualChart.Visibility = Visibility.Visible;
-                BudgetVsActualNoDataMessage.Visibility = Visibility.Collapsed;
+                // Ensure UI refresh
+                BudgetVsActualChart.Update(true, true);
             }
             catch (Exception ex)
             {
@@ -696,6 +699,8 @@ namespace PersonalFinanceApp
                 MainWindow.Instance.ShowNotification("An error occurred while updating the Budget vs Actual chart.", NotificationType.Error);
             }
         }
+
+
 
 
 
