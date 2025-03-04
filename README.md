@@ -81,7 +81,7 @@ Want to help improve the app? Contributions are welcome!
 - Fixed records page not showing a record if it did not have a date set.
 
 # Known Bugs
-- Budgets vs Actual doesn't work properly and doesn't display the actual values.
+- Monthly expenses graph doesn't display data properly.
 
 ## 📝 License  
 
