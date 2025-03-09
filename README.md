@@ -80,6 +80,9 @@ Want to help improve the app? Contributions are welcome!
 - Fixed records page not showing a record if it did not have a date set.
 - Fixed Budgets graph on reports page not showing expenses properly.
 
+## Additions
+- Added a new Admin page that you can manage data on.
+
 # Known Bugs
 - Monthly expenses graph doesn't display data properly.
 
