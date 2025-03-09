@@ -59,8 +59,7 @@
 ---
 
 ## 📸 Demo  
-
-Check my website for the demo! [Ethan Passino Projects](https://ethanpassino.com/#projects)
+<img src="https://ethanpassino.com/personalfinance.gif">
 
 ---
 
