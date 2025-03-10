@@ -26,6 +26,9 @@
 - **📝 Budgeting**  
   A method of setting budgets for different categories for each month.
 
+- **Admin**
+  A page where you can manage the data that the application uses.
+
 ## Planned Additions/Changes
 - Add the ability to create and delete categories for spending.
 - Update all of the graphs to let you know when there is no data instead of displaying an empty graph
