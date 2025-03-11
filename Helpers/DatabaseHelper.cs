@@ -10,7 +10,6 @@ namespace PersonalFinanceApp
     public static class DatabaseHelper
     {
         private static readonly string connectionString = "Data Source=finance.db;Version=3;";
-        private static readonly string categoriesFile = "categories.txt";
         private static readonly List<string> defaultCategories = new List<string>
         {
             "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other"
@@ -142,45 +141,59 @@ namespace PersonalFinanceApp
                     Category TEXT,
                     Amount REAL NOT NULL DEFAULT 0
                   );";
+            string createCategoriesTable = @"
+                CREATE TABLE IF NOT EXISTS Categories (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT UNIQUE NOT NULL
+                );";
 
             ExecuteNonQuery(createTransactionsTable);
             ExecuteNonQuery(createPaystubsTable);
             ExecuteNonQuery(createBudgetsTable);
+            ExecuteNonQuery(createCategoriesTable);
+
+
+            // Check if there are no categories, if there aren't populate it with the default categories.
+            if (GetCategories().Count == 0)
+            {
+                InitializeCategories();
+            }
 
             Console.WriteLine("Database initialized successfully.");
         }
 
-        public static void InitializeCategories()
+        private static void InitializeCategories()
         {
-            if (!File.Exists(categoriesFile))
+            foreach (var category in defaultCategories)
             {
-                File.WriteAllLines(categoriesFile, defaultCategories);
+                AddCategory(category);
             }
         }
 
         public static List<string> GetCategories()
         {
-            return File.Exists(categoriesFile) ? File.ReadAllLines(categoriesFile).ToList() : new List<string>(defaultCategories);
+            List<string> categories = new List<string>();
+            string query = "SELECT Name FROM Categories";
+            DataTable dt = ExecuteQuery(query);
+            foreach (DataRow row in dt.Rows)
+            {
+                categories.Add(row["Name"].ToString());
+            }
+            return categories;
         }
 
         public static void AddCategory(string category)
         {
-            var categories = GetCategories();
-            if (!categories.Contains(category))
-            {
-                categories.Add(category);
-                File.WriteAllLines(categoriesFile, categories);
-            }
+            string query = "INSERT OR IGNORE INTO Categories (Name) VALUES (@Name)";
+            var parameters = new Dictionary<string, object> { { "@Name", category } };
+            ExecuteNonQuery(query, parameters);
         }
 
         public static void RemoveCategory(string category)
         {
-            var categories = GetCategories();
-            if (categories.Contains(category))
-            {
-                categories.Remove(category);
-                File.WriteAllLines(categoriesFile, categories);
-            }
+            string query = "DELETE FROM Categories WHERE Name = @Name";
+            var parameters = new Dictionary<string, object> { { "@Name", category } };
+            ExecuteNonQuery(query, parameters);
         }
     }
 }
