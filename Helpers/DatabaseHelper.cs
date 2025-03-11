@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
+using System.Linq;
 
 namespace PersonalFinanceApp
 {
     public static class DatabaseHelper
     {
         private static readonly string connectionString = "Data Source=finance.db;Version=3;";
+        private static readonly string categoriesFile = "categories.txt";
+        private static readonly List<string> defaultCategories = new List<string>
+        {
+            "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other"
+        };
 
         /// <summary>
         /// Opens a connection to the SQLite database.
@@ -141,6 +148,39 @@ namespace PersonalFinanceApp
             ExecuteNonQuery(createBudgetsTable);
 
             Console.WriteLine("Database initialized successfully.");
+        }
+
+        public static void InitializeCategories()
+        {
+            if (!File.Exists(categoriesFile))
+            {
+                File.WriteAllLines(categoriesFile, defaultCategories);
+            }
+        }
+
+        public static List<string> GetCategories()
+        {
+            return File.Exists(categoriesFile) ? File.ReadAllLines(categoriesFile).ToList() : new List<string>(defaultCategories);
+        }
+
+        public static void AddCategory(string category)
+        {
+            var categories = GetCategories();
+            if (!categories.Contains(category))
+            {
+                categories.Add(category);
+                File.WriteAllLines(categoriesFile, categories);
+            }
+        }
+
+        public static void RemoveCategory(string category)
+        {
+            var categories = GetCategories();
+            if (categories.Contains(category))
+            {
+                categories.Remove(category);
+                File.WriteAllLines(categoriesFile, categories);
+            }
         }
     }
 }

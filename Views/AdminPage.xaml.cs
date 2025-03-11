@@ -99,27 +99,16 @@ namespace PersonalFinanceApp.Views
 
         private void LoadCategories()
         {
-            if (File.Exists(categoriesFile))
-            {
-                categories = File.ReadAllLines(categoriesFile).ToList();
-            }
-            else
-            {
-                categories = new List<string>(defaultCategories);
-                File.WriteAllLines(categoriesFile, categories);
-            }
-            CategoryList.ItemsSource = categories;
+            CategoryList.ItemsSource = DatabaseHelper.GetCategories();
         }
 
         private void AddCategory_Click(object sender, RoutedEventArgs e)
         {
             string newCategory = CategoryInput.Text.Trim();
-            if (!string.IsNullOrEmpty(newCategory) && !categories.Contains(newCategory))
+            if (!string.IsNullOrEmpty(newCategory))
             {
-                categories.Add(newCategory);
-                File.WriteAllLines(categoriesFile, categories);
-                CategoryList.ItemsSource = null;
-                CategoryList.ItemsSource = categories;
+                DatabaseHelper.AddCategory(newCategory);
+                LoadCategories();
                 CategoryInput.Clear();
             }
         }
@@ -128,10 +117,8 @@ namespace PersonalFinanceApp.Views
         {
             if (CategoryList.SelectedItem is string selectedCategory)
             {
-                categories.Remove(selectedCategory);
-                File.WriteAllLines(categoriesFile, categories);
-                CategoryList.ItemsSource = null;
-                CategoryList.ItemsSource = categories;
+                DatabaseHelper.RemoveCategory(selectedCategory);
+                LoadCategories();
             }
         }
     }
