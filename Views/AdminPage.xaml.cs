@@ -11,9 +11,6 @@ namespace PersonalFinanceApp.Views
     public partial class AdminPage : Page
     {
         private string databasePath = "finance.db"; // Ensure this path points to your SQLite database
-        private List<string> categories;
-        private readonly string categoriesFile = "categories.txt";
-        private readonly List<string> defaultCategories = new List<string> { "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other" };
 
         public AdminPage()
         {
