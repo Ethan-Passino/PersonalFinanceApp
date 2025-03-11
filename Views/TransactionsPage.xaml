@@ -34,15 +34,6 @@
                 <TextBlock Text="Category" Foreground="White" FontSize="16" />
                 <ComboBox x:Name="CategoryDropdown" FontSize="14" HorizontalAlignment="Stretch"
           Foreground="White" Background="#333333" BorderBrush="Gray">
-                    <!-- Dropdown Items -->
-                    <ComboBoxItem Content="Rent" />
-                    <ComboBoxItem Content="Gas" />
-                    <ComboBoxItem Content="Food" />
-                    <ComboBoxItem Content="Entertainment" />
-                    <ComboBoxItem Content="Savings" />
-                    <ComboBoxItem Content="Monthly" />
-                    <ComboBoxItem Content="Maintenance" />
-                    <ComboBoxItem Content="Other" />
 
                     <!-- Style for the ComboBox -->
                     <ComboBox.Resources>

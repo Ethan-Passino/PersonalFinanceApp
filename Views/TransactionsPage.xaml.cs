@@ -10,6 +10,16 @@ namespace PersonalFinanceApp
         public TransactionsPage()
         {
             InitializeComponent();
+            LoadCategories();
+        }
+
+        private void LoadCategories()
+        {
+            CategoryDropdown.Items.Clear();
+            foreach (var category in DatabaseHelper.GetCategories())
+            {
+                CategoryDropdown.Items.Add(new ComboBoxItem { Content = category });
+            }
         }
 
         private void SaveTransaction(object sender, RoutedEventArgs e)
