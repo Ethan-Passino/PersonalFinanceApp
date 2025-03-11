@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,10 +11,14 @@ namespace PersonalFinanceApp.Views
     public partial class AdminPage : Page
     {
         private string databasePath = "finance.db"; // Ensure this path points to your SQLite database
+        private List<string> categories;
+        private readonly string categoriesFile = "categories.txt";
+        private readonly List<string> defaultCategories = new List<string> { "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other" };
 
         public AdminPage()
         {
             InitializeComponent();
+            LoadCategories();
         }
 
         private void BackupDatabase_Click(object sender, RoutedEventArgs e)
@@ -88,6 +94,44 @@ namespace PersonalFinanceApp.Views
                 {
                     BackupStatus.Text = "Reset canceled. Incorrect confirmation input.";
                 }
+            }
+        }
+
+        private void LoadCategories()
+        {
+            if (File.Exists(categoriesFile))
+            {
+                categories = File.ReadAllLines(categoriesFile).ToList();
+            }
+            else
+            {
+                categories = new List<string>(defaultCategories);
+                File.WriteAllLines(categoriesFile, categories);
+            }
+            CategoryList.ItemsSource = categories;
+        }
+
+        private void AddCategory_Click(object sender, RoutedEventArgs e)
+        {
+            string newCategory = CategoryInput.Text.Trim();
+            if (!string.IsNullOrEmpty(newCategory) && !categories.Contains(newCategory))
+            {
+                categories.Add(newCategory);
+                File.WriteAllLines(categoriesFile, categories);
+                CategoryList.ItemsSource = null;
+                CategoryList.ItemsSource = categories;
+                CategoryInput.Clear();
+            }
+        }
+
+        private void RemoveCategory_Click(object sender, RoutedEventArgs e)
+        {
+            if (CategoryList.SelectedItem is string selectedCategory)
+            {
+                categories.Remove(selectedCategory);
+                File.WriteAllLines(categoriesFile, categories);
+                CategoryList.ItemsSource = null;
+                CategoryList.ItemsSource = categories;
             }
         }
     }
