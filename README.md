@@ -48,7 +48,7 @@
 
 3. Build the project and run it locally.
 
-4. Make sure SQLite is installed and working properly with the app.
+4. If you are having issues make sure that the proper external libraries are installed correctly.
 
 ---
 
