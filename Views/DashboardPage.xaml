@@ -57,27 +57,49 @@
             </StackPanel>
 
             <!-- Expense Breakdown Chart -->
-            <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
-                <TextBlock Text="This graph shows your income and expenses trends over the last month." 
-               Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,0" />
-                <lvc:PieChart x:Name="ExpenseBreakdownChart" Margin="0, 115, 0, 10" Height="400" VerticalAlignment="Stretch" RenderTransformOrigin="0.457,1.388"/>
-                <TextBlock x:Name="NoDataMessage" Text="No expense data available." Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
-            </StackPanel>
+            <Grid Grid.Column="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <!-- This row ensures the PieChart takes up available space -->
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
+                <TextBlock Grid.Row="1" Text="This graph shows your income and expenses trends over the last month." 
+               Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
+
+                <lvc:PieChart Grid.Row="2" x:Name="ExpenseBreakdownChart"
+                  Margin="10"
+                  MinHeight="300" MinWidth="300"
+                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                  RenderTransformOrigin="0.5,0.5"/>
+
+                <TextBlock Grid.Row="3" x:Name="NoDataMessage" Text="No expense data available."
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
+            </Grid>
+
         </Grid>
 
         <!-- Recent Transactions Section -->
         <Grid Grid.Row="1" Margin="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Title stays fixed -->
+                <RowDefinition Height="*"/>
+                <!-- Transactions section expands but is not removed -->
+            </Grid.RowDefinitions>
 
-            <StackPanel Margin="10">
-                <TextBlock Text="Recent Transactions" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Height="400">
-                    <StackPanel x:Name="RecentActivityList" />
-                </ScrollViewer>
-            </StackPanel>
+            <!-- Title -->
+            <TextBlock Grid.Row="0" Text="Recent Transactions" Foreground="White" FontSize="16" FontWeight="Bold" Margin="10,0,0,10" />
+
+            <!-- Transactions List -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  MinHeight="200" Height="Auto">
+                <!-- Ensures it doesn’t disappear -->
+                <StackPanel x:Name="RecentActivityList" />
+            </ScrollViewer>
         </Grid>
 
         <!-- Hover Popup for Transactions -->
@@ -86,5 +108,6 @@
                 <TextBlock x:Name="PopupText" Foreground="White" FontSize="14" TextWrapping="Wrap" />
             </Border>
         </Popup>
+
     </Grid>
 </Page>

@@ -313,18 +313,47 @@ namespace PersonalFinanceApp
 
         private void UpdateMonthlyAveragesChart(List<Transaction> transactions, List<Paystub> paystubs)
         {
+            // Extract dates separately
+            var transactionDates = transactions.Select(t => t.Date);
+            var paystubDates = paystubs.Select(p => p.Date);
+
+            // Get min and max dates from both lists
+            var allDates = transactionDates.Concat(paystubDates).ToList();
+
+            if (!allDates.Any()) // If no data is available
+            {
+                MonthlyAveragesChart.Visibility = Visibility.Collapsed;
+                MonthlyAveragesNoDataMessage.Visibility = Visibility.Visible;
+                return;
+            }
+
+            var minDate = allDates.Min();
+            var maxDate = allDates.Max();
+
+            var allMonths = new List<string>();
+            for (var dt = new DateTime(minDate.Year, minDate.Month, 1); dt <= new DateTime(maxDate.Year, maxDate.Month, 1); dt = dt.AddMonths(1))
+            {
+                allMonths.Add($"{dt.Year}-{dt.Month:00}");
+            }
+
+            // Calculate total income per month
             var monthlyIncome = paystubs
                 .GroupBy(p => new { p.Date.Year, p.Date.Month })
-                .Select(g => new { Month = $"{g.Key.Year}-{g.Key.Month:00}", AverageIncome = g.Average(p => double.Parse(p.Income)) })
-                .ToList();
+                .ToDictionary(
+                    g => $"{g.Key.Year}-{g.Key.Month:00}",
+                    g => g.Sum(p => double.TryParse(p.Income, out double income) ? income : 0) // Safer parsing
+                );
 
+            // Calculate total expenses per month
             var monthlyExpenses = transactions
                 .GroupBy(t => new { t.Date.Year, t.Date.Month })
-                .Select(g => new { Month = $"{g.Key.Year}-{g.Key.Month:00}", AverageExpense = g.Average(t => double.Parse(t.Amount)) })
-                .ToList();
+                .ToDictionary(
+                    g => $"{g.Key.Year}-{g.Key.Month:00}",
+                    g => g.Sum(t => double.TryParse(t.Amount, out double amount) ? amount : 0) // Safer parsing
+                );
 
-            // Check if there is data. If there isn't, display a message
-            if(!monthlyIncome.Any() && !monthlyExpenses.Any())
+            // Prevent displaying empty graph
+            if (!monthlyIncome.Any() && !monthlyExpenses.Any())
             {
                 MonthlyAveragesChart.Visibility = Visibility.Collapsed;
                 MonthlyAveragesNoDataMessage.Visibility = Visibility.Visible;
@@ -336,18 +365,17 @@ namespace PersonalFinanceApp
                 MonthlyAveragesNoDataMessage.Visibility = Visibility.Collapsed;
             }
 
-
-            var allMonths = monthlyIncome.Select(mi => mi.Month).Union(monthlyExpenses.Select(me => me.Month)).Distinct().OrderBy(m => m).ToList();
-
+            // Compute average income and expenses per month
             var incomeValues = new ChartValues<double>();
             var expenseValues = new ChartValues<double>();
 
             foreach (var month in allMonths)
             {
-                incomeValues.Add(monthlyIncome.FirstOrDefault(mi => mi.Month == month)?.AverageIncome ?? 0);
-                expenseValues.Add(monthlyExpenses.FirstOrDefault(me => me.Month == month)?.AverageExpense ?? 0);
+                incomeValues.Add(monthlyIncome.ContainsKey(month) ? monthlyIncome[month] : 0);
+                expenseValues.Add(monthlyExpenses.ContainsKey(month) ? monthlyExpenses[month] : 0);
             }
 
+            // Update the chart
             MonthlyAveragesChart.Series = new SeriesCollection
     {
         new ColumnSeries
@@ -366,6 +394,8 @@ namespace PersonalFinanceApp
 
             MonthlyAveragesChart.AxisX[0].Labels = allMonths;
         }
+
+
 
         private void UpdateExpenseDistributionChart(List<Transaction> transactions)
         {

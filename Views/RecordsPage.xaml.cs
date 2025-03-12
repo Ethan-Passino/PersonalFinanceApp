@@ -193,8 +193,9 @@ namespace PersonalFinanceApp
 
         private bool ValidateTransaction(Transaction transaction, out string errorMessage)
         {
-            string[] validCategories = { "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other" };
-            if (!Array.Exists(validCategories, category => category == transaction.Category))
+            List<string> validCategories = DatabaseHelper.GetCategories();
+
+            if (!validCategories.Contains(transaction.Category))
             {
                 errorMessage = "Invalid category. Please select a valid category.";
                 return false;

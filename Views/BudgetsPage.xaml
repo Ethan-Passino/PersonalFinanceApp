@@ -79,12 +79,63 @@
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <ComboBox x:Name="CategoryPicker" Width="150" Margin="10" 
-                       />
-            <TextBox x:Name="BudgetAmountInput" Width="150" Margin="10" 
-                    />
+            <StackPanel Width="200" Margin="10">
+                <TextBlock Text="Category" Foreground="White" FontSize="16" Margin="0,0,0,5" />
+                <ComboBox x:Name="CategoryPicker" FontSize="14" Height="20" Width="200" HorizontalAlignment="Stretch"
+                  Foreground="White" Background="#333333" BorderBrush="Gray">
+                    <ComboBox.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#333333" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#007ACC" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White" />
+                    </ComboBox.Resources>
+                    <ComboBox.Style>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ComboBox">
+                                        <Grid>
+                                            <Border Name="ContentBorder" Background="#333333" BorderBrush="Gray" BorderThickness="1">
+                                                <ContentPresenter Content="{TemplateBinding SelectionBoxItem}" 
+                                          VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,2" />
+                                            </Border>
+                                            <ToggleButton Name="DropDownToggle" 
+                                          Focusable="False" 
+                                          IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" 
+                                          Background="#333333" 
+                                          Foreground="White" 
+                                          BorderBrush="Gray" 
+                                          BorderThickness="1" 
+                                          HorizontalAlignment="Right"
+                                          Width="30" 
+                                          VerticalAlignment="Stretch">
+                                                <Path Data="M 0 0 L 8 8 L 16 0 Z" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </ToggleButton>
+                                            <Popup Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" Focusable="False" AllowsTransparency="True" PopupAnimation="Slide">
+                                                <Border Background="#333333" BorderBrush="Gray" BorderThickness="1" Width="{TemplateBinding ActualWidth}">
+                                                    <ScrollViewer>
+                                                        <StackPanel>
+                                                            <ItemsPresenter />
+                                                        </StackPanel>
+                                                    </ScrollViewer>
+                                                </Border>
+                                            </Popup>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Width="200" Margin="10">
+                <TextBlock Text="Amount" Foreground="White" FontSize="16" Margin="0,0,0,5" />
+                <TextBox x:Name="BudgetAmountInput" Height="20" Width="200" Background="#333333" Foreground="White" BorderBrush="Gray" FontSize="14" />
+            </StackPanel>
+
             <Button Content="Add Budget" Width="150" Margin="10" 
-                    Style="{StaticResource DarkThemeButton}" Click="AddBudget_Click"/>
+            Style="{StaticResource DarkThemeButton}" Click="AddBudget_Click"/>
         </StackPanel>
     </Grid>
 </Page>

@@ -1,4 +1,4 @@
-# 💰 Personal Finance App
+# 💰 Personal Finance App v1.1
 
 ### A sleek and intuitive WPF-based personal finance application for tracking income, expenses, budgeting and more! This app makes it easy to stay on top of your financial goals.  
 ---
@@ -25,16 +25,9 @@
 
 - **📝 Budgeting**  
   A method of setting budgets for different categories for each month.
-
-- **Admin**
-  A page where you can manage the data that the application uses.
-
-## Planned Additions/Changes
-- Add the ability to create and delete categories for spending.
-- Update all of the graphs to let you know when there is no data instead of displaying an empty graph
-- Graphs should look better no matter what the data looks like
-- Settings page for changing simple settings in the app such as themes.
-- Ability to backup all of your data in the application.
+  
+- **⚙️ Settings**  
+  The ability to manage data and remove and add categories.
 
 ---
 
@@ -77,17 +70,11 @@ Want to help improve the app? Contributions are welcome!
 
 ---
 
-## Patches
-- Fixed the budgets page not always properly showing the categories table.
-- Fixed records page not showing all data if there was too much data.
-- Fixed records page not showing a record if it did not have a date set.
-- Fixed Budgets graph on reports page not showing expenses properly.
+## 🐛 Known Bugs
+These are bugs the team already knows about but have not patched. Please report any bug you find that is not here in our issues section.
+- Recent Transactions do not appear on the Dashboard page.
 
-## Additions
-- Added a new Admin page that you can manage data on.
-
-# Known Bugs
-- Monthly expenses graph doesn't display data properly.
+---
 
 ## 📝 License  
 

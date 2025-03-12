@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
+using System.Linq;
 
 namespace PersonalFinanceApp
 {
     public static class DatabaseHelper
     {
         private static readonly string connectionString = "Data Source=finance.db;Version=3;";
+        private static readonly List<string> defaultCategories = new List<string>
+        {
+            "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other"
+        };
 
         /// <summary>
         /// Opens a connection to the SQLite database.
@@ -135,12 +141,73 @@ namespace PersonalFinanceApp
                     Category TEXT,
                     Amount REAL NOT NULL DEFAULT 0
                   );";
+            string createCategoriesTable = @"
+                CREATE TABLE IF NOT EXISTS Categories (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT UNIQUE NOT NULL
+                );";
 
             ExecuteNonQuery(createTransactionsTable);
             ExecuteNonQuery(createPaystubsTable);
             ExecuteNonQuery(createBudgetsTable);
+            ExecuteNonQuery(createCategoriesTable);
+
+
+            // Check if there are no categories, if there aren't populate it with the default categories.
+            if (GetCategories().Count == 0)
+            {
+                InitializeCategories();
+            }
 
             Console.WriteLine("Database initialized successfully.");
+        }
+
+        private static void InitializeCategories()
+        {
+            foreach (var category in defaultCategories)
+            {
+                AddCategory(category);
+            }
+        }
+
+        public static List<string> GetCategories()
+        {
+            List<string> categories = new List<string>();
+            string query = "SELECT Name FROM Categories";
+            DataTable dt = ExecuteQuery(query);
+            foreach (DataRow row in dt.Rows)
+            {
+                categories.Add(row["Name"].ToString());
+            }
+            return categories;
+        }
+
+        public static void AddCategory(string category)
+        {
+            string query = "INSERT OR IGNORE INTO Categories (Name) VALUES (@Name)";
+            var parameters = new Dictionary<string, object> { { "@Name", category } };
+            ExecuteNonQuery(query, parameters);
+        }
+
+        public static void RemoveCategory(string category)
+        {
+            string otherCategoryQuery = "SELECT COUNT(*) FROM Categories WHERE Name = 'Other'";
+            int otherCategoryExists = Convert.ToInt32(ExecuteScalar(otherCategoryQuery));
+
+            if (otherCategoryExists == 0)
+            {
+                AddCategory("Other");
+            }
+
+            string updateTransactionsQuery = "UPDATE Transactions SET Category = 'Other' WHERE Category = @Category";
+            var parameters = new Dictionary<string, object> { { "@Category", category } };
+            ExecuteNonQuery(updateTransactionsQuery, parameters);
+
+            string deleteBudgetQuery = "DELETE FROM Budgets WHERE Category = @Category";
+            ExecuteNonQuery(deleteBudgetQuery, parameters);
+
+            string deleteCategoryQuery = "DELETE FROM Categories WHERE Name = @Category";
+            ExecuteNonQuery(deleteCategoryQuery, parameters);
         }
     }
 }

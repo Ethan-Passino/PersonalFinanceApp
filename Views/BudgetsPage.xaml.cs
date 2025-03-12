@@ -18,11 +18,6 @@ namespace PersonalFinanceApp.Views
 
         private bool isEditingBudget = false;
 
-        private static readonly string[] PredefinedCategories =
-        {
-            "Rent", "Gas", "Food", "Entertainment", "Savings", "Monthly", "Maintenance", "Other"
-        };
-
         public BudgetsPage()
         {
             InitializeComponent();
@@ -34,7 +29,7 @@ namespace PersonalFinanceApp.Views
             Budgets.CollectionChanged += (s, e) => UpdateTotalBudget(); // Update total when collection changes
             UpdateTotalBudget(); // Initial update
             BudgetsGrid.ItemsSource = Budgets;
-            CategoryPicker.ItemsSource = PredefinedCategories;
+            CategoryPicker.ItemsSource = DatabaseHelper.GetCategories();
         }
 
         private void LoadBudgets()
@@ -277,7 +272,9 @@ namespace PersonalFinanceApp.Views
 
         private bool ValidateBudget(Budget budget, out string errorMessage)
         {
-            if (!Array.Exists(PredefinedCategories, category => category == budget.Category))
+            List<string> validCategories = DatabaseHelper.GetCategories();
+
+            if (!validCategories.Contains(budget.Category))
             {
                 errorMessage = "Invalid category. Please select a valid category.";
                 return false;

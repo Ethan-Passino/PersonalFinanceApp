@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +15,7 @@ namespace PersonalFinanceApp.Views
         public AdminPage()
         {
             InitializeComponent();
+            LoadCategories();
         }
 
         private void BackupDatabase_Click(object sender, RoutedEventArgs e)
@@ -87,6 +90,49 @@ namespace PersonalFinanceApp.Views
                 else
                 {
                     BackupStatus.Text = "Reset canceled. Incorrect confirmation input.";
+                }
+            }
+        }
+
+        private void LoadCategories()
+        {
+            CategoryList.ItemsSource = DatabaseHelper.GetCategories();
+        }
+
+        private void AddCategory_Click(object sender, RoutedEventArgs e)
+        {
+            string newCategory = CategoryInput.Text.Trim();
+            if (!string.IsNullOrEmpty(newCategory))
+            {
+                DatabaseHelper.AddCategory(newCategory);
+                LoadCategories();
+                CategoryInput.Clear();
+            }
+        }
+
+        private void RemoveCategory_Click(object sender, RoutedEventArgs e)
+        {
+            if (CategoryList.SelectedItem is string selectedCategory)
+            {
+                if (selectedCategory == "Other")
+                {
+                    MessageBox.Show("The 'Other' category cannot be deleted, it is used as a default category.", 
+                        "Deletion Not Allowed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                DatabaseHelper.RemoveCategory(selectedCategory);
+                string message = $"Are you sure you want to delete the category '{selectedCategory}'?\n\n" +
+                                 "All transactions under this category will be reassigned to 'Other'.\n" +
+                                 "Any budget associated with this category will be deleted permanently.";
+
+                MessageBoxResult result = MessageBox.Show(message, "Confirm Category Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    DatabaseHelper.RemoveCategory(selectedCategory);
+                    LoadCategories();
+                    MessageBox.Show($"Category '{selectedCategory}' has been deleted. All transactions moved to 'Other'.",
+                                    "Category Deleted", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
