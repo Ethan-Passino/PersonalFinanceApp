@@ -191,9 +191,23 @@ namespace PersonalFinanceApp
 
         public static void RemoveCategory(string category)
         {
-            string query = "DELETE FROM Categories WHERE Name = @Name";
-            var parameters = new Dictionary<string, object> { { "@Name", category } };
-            ExecuteNonQuery(query, parameters);
+            string otherCategoryQuery = "SELECT COUNT(*) FROM Categories WHERE Name = 'Other'";
+            int otherCategoryExists = Convert.ToInt32(ExecuteScalar(otherCategoryQuery));
+
+            if (otherCategoryExists == 0)
+            {
+                AddCategory("Other");
+            }
+
+            string updateTransactionsQuery = "UPDATE Transactions SET Category = 'Other' WHERE Category = @Category";
+            var parameters = new Dictionary<string, object> { { "@Category", category } };
+            ExecuteNonQuery(updateTransactionsQuery, parameters);
+
+            string deleteBudgetQuery = "DELETE FROM Budgets WHERE Category = @Category";
+            ExecuteNonQuery(deleteBudgetQuery, parameters);
+
+            string deleteCategoryQuery = "DELETE FROM Categories WHERE Name = @Category";
+            ExecuteNonQuery(deleteCategoryQuery, parameters);
         }
     }
 }
