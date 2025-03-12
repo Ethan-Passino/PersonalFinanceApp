@@ -30,12 +30,12 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
             <Button Content="Dashboard" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToDashboard" />
+            <Button Content="Add Pay Stub" Width="100" Height="40" Margin="10"
+                    Style="{StaticResource DarkThemeButton}" Click="NavigateToPayStub" />
             <Button Content="Add Transaction" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToTransactions" />
             <Button Content="View Reports" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToReports" />
-            <Button Content="Add Pay Stub" Width="100" Height="40" Margin="10"
-                    Style="{StaticResource DarkThemeButton}" Click="NavigateToPayStub" />
             <Button Content="View Records" Width="100" Height="40" Margin="10"
                     Style="{StaticResource DarkThemeButton}" Click="NavigateToRecords" />
             <Button Content="Edit Budgets" Width="100" Height="40" Margin="10" 
