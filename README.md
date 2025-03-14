@@ -31,20 +31,6 @@
 
 ---
 
-## 🚀 Getting Started
-
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/EthanPassino/PersonalFinanceApp.git
-   cd PersonalFinanceApp
-2. Open the solution file in Visual Studio 2022.
-
-3. Build the project and run it locally.
-
-4. If you are having issues make sure that the proper external libraries are installed correctly.
-
----
-
 ## 🛠️ Technologies Used
 
 - **WPF** for the user interface  
