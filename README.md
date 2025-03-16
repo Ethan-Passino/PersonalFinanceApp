@@ -20,9 +20,6 @@
 - **📜 Records**  
   Scrollable, editable tables for pay stubs and transactions.  
 
-- **💡 Notifications**  
-  Custom dark-themed notifications for success, errors, and information.
-
 - **📝 Budgeting**  
   A method of setting budgets for different categories for each month.
   
