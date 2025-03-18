@@ -25,60 +25,43 @@ namespace PersonalFinanceApp
         {
             try
             {
-                // Fetch recent transactions from the database (limit to 50)
+                // Fetch recent transactions from the database
                 string recentTransactionsQuery = "SELECT Category, Amount, Date, Description FROM Transactions ORDER BY Date DESC LIMIT 50;";
                 var transactionsTable = DatabaseHelper.ExecuteQuery(recentTransactionsQuery);
 
-                // Clear any existing mock data
-                RecentActivityList.Children.Clear();
-
-                // Populate the recent transactions list
+                // Convert DataTable to List of Transactions
+                var transactions = new List<Transaction>();
                 foreach (DataRow row in transactionsTable.Rows)
                 {
-                    var transactionItem = new Border
+                    transactions.Add(new Transaction
                     {
-                        Background = System.Windows.Media.Brushes.Gray,
-                        CornerRadius = new CornerRadius(5),
-                        Padding = new Thickness(10),
-                        Margin = new Thickness(5)
-                    };
-
-                    var transactionDetails = new StackPanel();
-                    transactionDetails.Children.Add(new TextBlock
-                    {
-                        Text = $"{row["Category"]} - ${row["Amount"]:0.00}",
-                        Foreground = System.Windows.Media.Brushes.White,
-                        FontSize = 14
+                        Category = row["Category"].ToString(),
+                        Amount = Convert.ToDouble(row["Amount"]),
+                        Date = row["Date"].ToString(),
+                        Description = row["Description"].ToString()
                     });
-                    transactionDetails.Children.Add(new TextBlock
-                    {
-                        Text = row["Date"].ToString(),
-                        Foreground = System.Windows.Media.Brushes.LightGray,
-                        FontSize = 12
-                    });
-
-                    transactionItem.Child = transactionDetails;
-
-                    // Add hover event to display description
-                    transactionItem.MouseEnter += (s, e) =>
-                    {
-                        PopupText.Text = row["Description"].ToString();
-                        TransactionPopup.IsOpen = true;
-                    };
-                    transactionItem.MouseLeave += (s, e) =>
-                    {
-                        TransactionPopup.IsOpen = false;
-                    };
-
-                    RecentActivityList.Children.Add(transactionItem);
                 }
+
+                // Debug: Notify how many transactions were retrieved
+                if (transactions.Count == 0)
+                {
+                    MainWindow.Instance.ShowNotification("No transactions found in the database.", NotificationType.Warning);
+                }
+                else
+                {
+                    MainWindow.Instance.ShowNotification($"Loaded {transactions.Count} transactions.", NotificationType.Success);
+                }
+
+                // Bind the list to ItemsControl
+                RecentActivityList.ItemsSource = transactions;
             }
             catch (Exception ex)
             {
-                MainWindow.Instance.ShowNotification($"Error loading recent transactions: {ex.Message}", NotificationType.Error);
-                Console.WriteLine($"Error: {ex}");
+                MainWindow.Instance.ShowNotification($"Error loading transactions: {ex.Message}", NotificationType.Error);
             }
         }
+
+
 
 
         private void LoadExpenseBreakdown()
