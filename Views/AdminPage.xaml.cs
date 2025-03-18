@@ -58,6 +58,8 @@ namespace PersonalFinanceApp.Views
                     {
                         File.Copy(openFileDialog.FileName, databasePath, true);
                         BackupStatus.Text = "Database restored successfully from: " + openFileDialog.FileName;
+                        MessageBox.Show("Database restored successfully. You will need to reopen the program.", "Reset Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Application.Current.Shutdown();
                     }
                     catch (Exception ex)
                     {
