@@ -37,7 +37,7 @@
 
 ---
 
-## 📸 Demo  
+## 📸 Demo (outdated)
 <img src="https://ethanpassino.com/personalfinance.gif">
 
 [Portfolio Website](https://ethanpassino.com)
@@ -57,8 +57,7 @@ Want to help improve the app? Contributions are welcome!
 
 ## 🐛 Known Bugs
 These are bugs the team already knows about but have not patched. Please report any bug you find that is not here in our issues section.
-- Recent Transactions do not appear on the Dashboard page.
-- Recent Transactions not scrollable
+- NONE! Please report any you find.
 
 ---
 
