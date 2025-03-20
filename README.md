@@ -24,7 +24,7 @@
   A method of setting budgets for different categories for each month.
   
 - **⚙️ Settings**  
-  The ability to manage data and remove and add categories.
+  The ability to manage data and manage categories.
 
 ---
 
