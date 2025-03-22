@@ -40,7 +40,7 @@
 ## 📸 Demo (outdated)
 <img src="https://ethanpassino.com/personalfinance.gif">
 
-[Portfolio Website](https://ethanpassino.com)
+[Portfolio Website Projects](https://ethanpassino.com)
 
 ---
 
