@@ -3,7 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       Title="Dashboard">
-    <Grid Background="#1E1E1E">
+    <ScrollViewer Grid.Row="1" 
+              VerticalScrollBarVisibility="Auto" 
+              HorizontalScrollBarVisibility="Disabled"
+              Height="Auto">
+        <Grid Background="#1E1E1E">
         <!-- Define Rows for Layout -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -95,10 +99,7 @@
             <TextBlock Grid.Row="0" Text="Recent Transactions" Foreground="White" FontSize="16" FontWeight="Bold" Margin="10,0,0,10" />
 
             <!-- Transactions List -->
-            <ScrollViewer Grid.Row="1" 
-              VerticalScrollBarVisibility="Auto" 
-              HorizontalScrollBarVisibility="Disabled"
-              Height="Auto">
+
                 <ItemsControl x:Name="RecentActivityList">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -130,9 +131,10 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </ScrollViewer>
+           
 
         </Grid>
 
     </Grid>
+    </ScrollViewer>
 </Page>
