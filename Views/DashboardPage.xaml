@@ -73,15 +73,15 @@
                 <TextBlock Grid.Row="0" Text="Expense Breakdown (Last Month)" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
                 <TextBlock Grid.Row="1" Text="This graph shows your income and expenses trends over the last month." 
                Foreground="LightGray" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10" />
-
-                <lvc:PieChart Grid.Row="2" x:Name="ExpenseBreakdownChart"
+                    <TextBlock Grid.Row="2" x:Name="NoDataMessage" Text="No expense data available."
+               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
+                    <lvc:PieChart Grid.Row="2" x:Name="ExpenseBreakdownChart"
                   Margin="10"
                   MaxHeight="300" MaxWidth="300"
                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                   RenderTransformOrigin="0.5,0.5"/>
 
-                <TextBlock Grid.Row="3" x:Name="NoDataMessage" Text="No expense data available."
-               Foreground="Gray" FontSize="14" FontStyle="Italic" Visibility="Collapsed" />
+
             </Grid>
 
         </Grid>
