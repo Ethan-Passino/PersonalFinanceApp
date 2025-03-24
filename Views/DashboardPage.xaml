@@ -131,9 +131,18 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-           
+                <TextBlock x:Name="NoRecentTransactionsMessage"
+           Text="No recent transactions available."
+           Foreground="Gray"
+           FontSize="14"
+           FontStyle="Italic"
+           Visibility="Collapsed"
+           HorizontalAlignment="Left"
+           Margin="0,30,0,0" />
 
-        </Grid>
+
+
+            </Grid>
 
     </Grid>
     </ScrollViewer>

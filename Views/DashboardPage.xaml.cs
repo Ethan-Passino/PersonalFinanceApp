@@ -44,9 +44,15 @@ namespace PersonalFinanceApp
 
                 // Bind the list to ItemsControl
                 RecentActivityList.ItemsSource = transactions;
+
+                // Show or hide the no data message
+                NoRecentTransactionsMessage.Visibility = transactions.Any()
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
             }
             catch (Exception ex)
             {
+                NoRecentTransactionsMessage.Visibility = Visibility.Visible;
                 MainWindow.Instance.ShowNotification($"Error loading transactions: {ex.Message}", NotificationType.Error);
             }
         }
