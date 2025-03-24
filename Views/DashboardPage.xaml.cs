@@ -42,16 +42,6 @@ namespace PersonalFinanceApp
                     });
                 }
 
-                // Debug: Notify how many transactions were retrieved
-                if (transactions.Count == 0)
-                {
-                    MainWindow.Instance.ShowNotification("No transactions found in the database.", NotificationType.Warning);
-                }
-                else
-                {
-                    MainWindow.Instance.ShowNotification($"Loaded {transactions.Count} transactions.", NotificationType.Success);
-                }
-
                 // Bind the list to ItemsControl
                 RecentActivityList.ItemsSource = transactions;
             }
