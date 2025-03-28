@@ -5,10 +5,10 @@
 
 ## 📖 Features
 
-- **💼 Add and Manage Pay Stubs**  
+- **💼 Add and Manage Pay Stubs (Income)**  
   Easily add your income sources with dates, descriptions, and employer details.  
 
-- **💸 Track Transactions**  
+- **💸 Track Transactions (Expenses)**  
   Log your expenses with categories, descriptions, and amounts.  
 
 - **📊 Visual Reports**  
