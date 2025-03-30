@@ -33,7 +33,8 @@
 - **WPF** for the user interface  
 - **SQLite** for local database storage  
 - **LiveCharts** for interactive charts  
-- **C#** for backend logic  
+- **C#** for backend logic
+- **XAML** for frontend logic
 
 ---
 
