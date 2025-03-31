@@ -97,7 +97,7 @@
                                         <Grid>
                                             <Border Name="ContentBorder" Background="#333333" BorderBrush="Gray" BorderThickness="1">
                                                 <ContentPresenter Content="{TemplateBinding SelectionBoxItem}" 
-                                          VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,2" />
+                                          VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                             </Border>
                                             <ToggleButton Name="DropDownToggle" 
                                           Focusable="False" 
