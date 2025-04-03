@@ -51,7 +51,7 @@ namespace PersonalFinanceApp
 
                 foreach (DataRow row in transactionsTable.Rows)
                 {
-                    if (!IsRowValid(row, new[] { "Amount", "Category", "Date", "Description" }))
+                    if (!IsRowValid(row, new[] { "Amount", "Category", "Date", "Description" }, new[] { "Description" }))
                         continue;
 
                     Transactions.Add(new Transaction
@@ -399,8 +399,7 @@ namespace PersonalFinanceApp
             if (e.Row.Item is Transaction transaction)
             {
                 if (string.IsNullOrWhiteSpace(transaction.Category) ||
-                    string.IsNullOrWhiteSpace(transaction.Date) ||
-                    string.IsNullOrWhiteSpace(transaction.Description))
+                    string.IsNullOrWhiteSpace(transaction.Date))
                 {
                     // Remove invalid rows from the source
                     Transactions.Remove(transaction);
