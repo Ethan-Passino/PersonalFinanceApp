@@ -125,10 +125,19 @@ namespace PersonalFinanceApp
 
         private void UpdateReports()
         {
+            StartDatePicker.BorderBrush = System.Windows.Media.Brushes.Gray;
+            StartDatePicker.BorderThickness = new Thickness(1);
+            EndDatePicker.BorderBrush = System.Windows.Media.Brushes.Gray;
+            EndDatePicker.BorderThickness = new Thickness(1);
+
             try
             {
                 if (StartDatePicker.SelectedDate == null || EndDatePicker.SelectedDate == null)
                 {
+                    StartDatePicker.BorderBrush = System.Windows.Media.Brushes.Red;
+                    StartDatePicker.BorderThickness = new Thickness(2);
+                    EndDatePicker.BorderBrush = System.Windows.Media.Brushes.Red;
+                    EndDatePicker.BorderThickness = new Thickness(2);
                     MainWindow.Instance.ShowNotification("Please select a valid date range.", NotificationType.Warning);
                     return;
                 }
@@ -138,6 +147,8 @@ namespace PersonalFinanceApp
 
                 if (startDate > endDate)
                 {
+                    StartDatePicker.BorderBrush = System.Windows.Media.Brushes.Red;
+                    StartDatePicker.BorderThickness = new Thickness(2);
                     MainWindow.Instance.ShowNotification("Start date cannot be after end date.", NotificationType.Error);
                     return;
                 }
