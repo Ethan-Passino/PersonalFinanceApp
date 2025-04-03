@@ -155,24 +155,37 @@ namespace PersonalFinanceApp.Views
 
         private void AddBudget_Click(object sender, RoutedEventArgs e)
         {
+            // Reset borders first
+            CategoryPicker.BorderBrush = System.Windows.Media.Brushes.Gray;
+            CategoryPicker.BorderThickness = new Thickness(1);
+
+            BudgetAmountInput.BorderBrush = System.Windows.Media.Brushes.Gray;
+            BudgetAmountInput.BorderThickness = new Thickness(1);
+
             try
             {
                 var category = CategoryPicker.SelectedItem?.ToString();
                 if (string.IsNullOrWhiteSpace(category))
                 {
-                    MainWindow.Instance.ShowNotification("Please select a valid category.", NotificationType.Warning);
+                    CategoryPicker.BorderBrush = System.Windows.Media.Brushes.Red;
+                    CategoryPicker.BorderThickness = new Thickness(2);
+                    MainWindow.Instance.ShowNotification("Please select a valid category.", NotificationType.Error);
                     return;
                 }
 
                 if (Budgets.Any(b => b.Category == category))
                 {
-                    MainWindow.Instance.ShowNotification($"A budget for the category '{category}' already exists.", NotificationType.Warning);
+                    CategoryPicker.BorderBrush = System.Windows.Media.Brushes.Red;
+                    CategoryPicker.BorderThickness = new Thickness(2);
+                    MainWindow.Instance.ShowNotification($"A budget for the category '{category}' already exists.", NotificationType.Error);
                     return;
                 }
 
                 if (!double.TryParse(BudgetAmountInput.Text, out double amount) || amount <= 0)
                 {
-                    MainWindow.Instance.ShowNotification("Please enter a valid positive amount.", NotificationType.Warning);
+                    BudgetAmountInput.BorderBrush = System.Windows.Media.Brushes.Red;
+                    BudgetAmountInput.BorderThickness = new Thickness(2);
+                    MainWindow.Instance.ShowNotification("Please enter a valid positive amount.", NotificationType.Error);
                     return;
                 }
 
