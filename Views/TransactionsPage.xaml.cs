@@ -24,25 +24,45 @@ namespace PersonalFinanceApp
 
         private void SaveTransaction(object sender, RoutedEventArgs e)
         {
+            // Reset all borders to default at the start
+            AmountInput.BorderBrush = System.Windows.Media.Brushes.Gray;
+            AmountInput.BorderThickness = new Thickness(1);
+
+            CategoryDropdown.BorderBrush = System.Windows.Media.Brushes.Gray;
+            CategoryDropdown.BorderThickness = new Thickness(1);
+
+            TransactionDate.BorderBrush = System.Windows.Media.Brushes.Gray;
+            TransactionDate.BorderThickness = new Thickness(1);
+
             // Retrieve form data
             string amountText = AmountInput.Text;
             string category = (CategoryDropdown.SelectedItem as ComboBoxItem)?.Content.ToString();
             DateTime? date = TransactionDate.SelectedDate;
             string description = DescriptionInput.Text;
 
-            // Validate inputs
+            // Validate amount
             if (string.IsNullOrWhiteSpace(amountText) || !decimal.TryParse(amountText, out decimal amount))
             {
+                AmountInput.BorderBrush = System.Windows.Media.Brushes.Red;
+                AmountInput.BorderThickness = new Thickness(2);
                 MainWindow.Instance.ShowNotification("Please enter a valid amount.", MainWindow.NotificationType.Error);
                 return;
             }
+
+            // Validate category
             if (category == null)
             {
+                CategoryDropdown.BorderBrush = System.Windows.Media.Brushes.Red;
+                CategoryDropdown.BorderThickness = new Thickness(2);
                 MainWindow.Instance.ShowNotification("Please select a category.", MainWindow.NotificationType.Error);
                 return;
             }
+
+            // Validate date
             if (date == null)
             {
+                TransactionDate.BorderBrush = System.Windows.Media.Brushes.Red;
+                TransactionDate.BorderThickness = new Thickness(2);
                 MainWindow.Instance.ShowNotification("Please select a date.", MainWindow.NotificationType.Error);
                 return;
             }

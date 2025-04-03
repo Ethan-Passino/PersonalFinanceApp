@@ -52,7 +52,7 @@
                                     <ControlTemplate TargetType="ComboBox">
                                         <Grid>
                                             <!-- Display Area -->
-                                            <Border Name="ContentBorder" Background="#333333" BorderBrush="Gray" BorderThickness="1">
+                                            <Border Name="ContentBorder" Background="#333333" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                                 <ContentPresenter Content="{TemplateBinding SelectionBoxItem}" 
                                                   VerticalAlignment="Center"
                                                   HorizontalAlignment="Left"
@@ -65,8 +65,8 @@
                                           IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" 
                                           Background="#333333" 
                                           Foreground="White" 
-                                          BorderBrush="Gray" 
-                                          BorderThickness="1" 
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
                                           HorizontalAlignment="Right"
                                           Width="30" 
                                           VerticalAlignment="Stretch">
@@ -75,7 +75,7 @@
 
                                             <!-- Popup for Dropdown -->
                                             <Popup Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" Focusable="False" AllowsTransparency="True" PopupAnimation="Slide">
-                                                <Border Background="#333333" BorderBrush="Gray" BorderThickness="1" Width="{TemplateBinding ActualWidth}">
+                                                <Border Background="#333333" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Width="{TemplateBinding ActualWidth}">
                                                     <ScrollViewer>
                                                         <StackPanel>
                                                             <ItemsPresenter />
