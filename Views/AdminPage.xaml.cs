@@ -103,6 +103,10 @@ namespace PersonalFinanceApp.Views
 
         private void AddCategory_Click(object sender, RoutedEventArgs e)
         {
+            // Reset Category border
+            CategoryInput.BorderBrush = System.Windows.Media.Brushes.Gray;
+            CategoryInput.BorderThickness = new Thickness(1);
+
             string newCategory = CategoryInput.Text.Trim();
             if (!string.IsNullOrEmpty(newCategory))
             {
@@ -110,10 +114,18 @@ namespace PersonalFinanceApp.Views
                 LoadCategories();
                 CategoryInput.Clear();
             }
+            else
+            {
+                CategoryInput.BorderBrush = System.Windows.Media.Brushes.Red;
+                CategoryInput.BorderThickness = new Thickness(2);
+                MainWindow.Instance.ShowNotification("Please enter text into the field to create a category.", MainWindow.NotificationType.Error);
+            }
         }
 
         private void RemoveCategory_Click(object sender, RoutedEventArgs e)
         {
+            CategoryList.BorderBrush = System.Windows.Media.Brushes.Gray;
+            CategoryList.BorderThickness = new Thickness(1);
             if (CategoryList.SelectedItem is string selectedCategory)
             {
                 if (selectedCategory == "Other")
@@ -136,6 +148,12 @@ namespace PersonalFinanceApp.Views
                     MessageBox.Show($"Category '{selectedCategory}' has been deleted. All transactions moved to 'Other'.",
                                     "Category Deleted", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+            }
+            else
+            {
+                CategoryList.BorderBrush = System.Windows.Media.Brushes.Red;
+                CategoryList.BorderThickness = new Thickness(2);
+                MainWindow.Instance.ShowNotification("Please select a category to remove.", MainWindow.NotificationType.Error);
             }
         }
     }
