@@ -122,6 +122,47 @@ namespace PersonalFinanceApp.Views
             }
         }
 
+        private void RenameCategory_Click(object sender, RoutedEventArgs e)
+        {
+            if (CategoryList.SelectedItem is string selectedCategory)
+            {
+                string newCategoryName = RenameCategoryInput.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(newCategoryName))
+                {
+                    RenameCategoryInput.BorderBrush = System.Windows.Media.Brushes.Red;
+                    RenameCategoryInput.BorderThickness = new Thickness(2);
+                    MainWindow.Instance.ShowNotification("Please enter a new name for the category.", MainWindow.NotificationType.Error);
+                    return;
+                }
+
+                if (selectedCategory == "Other")
+                {
+                    MessageBox.Show("The 'Other' category cannot be renamed.", "Rename Not Allowed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                try
+                {
+                    DatabaseHelper.RenameCategory(selectedCategory, newCategoryName);
+                    LoadCategories();
+                    RenameCategoryInput.Clear();
+                    MainWindow.Instance.ShowNotification($"Category '{selectedCategory}' renamed to '{newCategoryName}'.", MainWindow.NotificationType.Success);
+                }
+                catch (Exception ex)
+                {
+                    MainWindow.Instance.ShowNotification("Rename failed: " + ex.Message, MainWindow.NotificationType.Critical);
+                }
+            }
+            else
+            {
+                CategoryList.BorderBrush = System.Windows.Media.Brushes.Red;
+                CategoryList.BorderThickness = new Thickness(2);
+                MainWindow.Instance.ShowNotification("Please select a category to rename.", MainWindow.NotificationType.Error);
+            }
+        }
+
+
         private void RemoveCategory_Click(object sender, RoutedEventArgs e)
         {
             CategoryList.BorderBrush = System.Windows.Media.Brushes.Gray;

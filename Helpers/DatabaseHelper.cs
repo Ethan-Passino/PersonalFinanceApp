@@ -189,6 +189,33 @@ namespace PersonalFinanceApp
             ExecuteNonQuery(query, parameters);
         }
 
+        public static void RenameCategory(string oldName, string newName)
+        {
+            string checkIfExists = "SELECT COUNT(*) FROM Categories WHERE Name = @NewName";
+            var checkParams = new Dictionary<string, object> { { "@NewName", newName } };
+            int exists = Convert.ToInt32(ExecuteScalar(checkIfExists, checkParams));
+
+            if (exists > 0)
+            {
+                throw new InvalidOperationException("A category with that name already exists.");
+            }
+
+            string updateTransactions = "UPDATE Transactions SET Category = @NewName WHERE Category = @OldName";
+            string updateBudgets = "UPDATE Budgets SET Category = @NewName WHERE Category = @OldName";
+            string updateCategory = "UPDATE Categories SET Name = @NewName WHERE Name = @OldName";
+
+            var parameters = new Dictionary<string, object>
+    {
+        { "@OldName", oldName },
+        { "@NewName", newName }
+    };
+
+            ExecuteNonQuery(updateTransactions, parameters);
+            ExecuteNonQuery(updateBudgets, parameters);
+            ExecuteNonQuery(updateCategory, parameters);
+        }
+
+
         public static void RemoveCategory(string category)
         {
             string otherCategoryQuery = "SELECT COUNT(*) FROM Categories WHERE Name = 'Other'";
