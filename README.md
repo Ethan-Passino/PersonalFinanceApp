@@ -58,7 +58,7 @@ Want to help improve the app? Contributions are welcome!
 
 ## 🐛 Known Bugs
 These are bugs the team already knows about but have not patched. Please report any bug you find that is not here in our issues section.
-- The reports page should entirely be scrollable but currently only the graphs are scrollable. Working on a fix 
+- NONE
 ---
 
 ## 📝 License  
