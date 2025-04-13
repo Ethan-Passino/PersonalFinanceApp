@@ -38,7 +38,7 @@
 
 ---
 
-## 📸 Demo (outdated)
+## 📸 Demo (outdated to be updated soon)
 <img src="https://ethanpassino.com/personalfinance.gif">
 
 [Ethan Passino Portfolio Website - Projects](https://ethanpassino.com)
