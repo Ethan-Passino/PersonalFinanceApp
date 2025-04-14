@@ -26,6 +26,8 @@
 - **⚙️ Settings**  
   The ability to manage data and manage categories.
 
+- ** Visual Errors**
+  You can see errors in real time.
 ---
 
 ## 🛠️ Technologies Used
