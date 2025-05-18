@@ -61,7 +61,7 @@ Want to help improve the app? Contributions are welcome!
 ## 🐛 Updates and Bugs
 At this point I am pretty happy with this application and don't really have a need to update it more. I however will be updating it if there are bugs.
 These are bugs the team already knows about but have not patched. Please report any bug you find that is not here in our issues section.
-- NONE
+- Records page column sorting does not work well
 ---
 
 ## 📝 License  
