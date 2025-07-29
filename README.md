@@ -1,4 +1,4 @@
-# 💰 Personal Finance App v1.2
+# 💰 Personal Finance App
 
 ### A dark theme and intuitive WPF-based personal finance application for tracking income, expenses, budgeting and more! This app makes it easy to stay on top of your financial goals with a dark theme.
 ---
